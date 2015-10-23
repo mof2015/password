@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Rand{
+class Generator{
     public static void main(String arg[]){
         String str=new String("abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ23456789");
         StringBuffer sb=new StringBuffer();
