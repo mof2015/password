@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) Korea University Information Security MOF Team
+ */
+ 
 import java.util.*;
 
 class Generator{
