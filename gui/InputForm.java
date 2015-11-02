@@ -86,7 +86,8 @@ public class InputForm extends JFrame{
 	  setBounds(500, 500, 400, 400);
       setResizable(false);
         
- }//Constructor for function windows
+ }
+ //Constructor for function windows
  public void initTF(){
   setTitle("Insert");
   tf_name.setText("");
@@ -99,12 +100,6 @@ public class InputForm extends JFrame{
  
  public void initUp(){//Edit form
   setTitle("Edit");
- }
- 
- public void initSearch(){//Search form
-  setTitle("Search");
-  tf_name.setText("");
-  tf_name.requestFocus();
  }
  
  } 
