@@ -32,7 +32,7 @@ public class InputForm extends JFrame{
      slider.setMinorTickSpacing(5);     
      slider.addChangeListener(listener);
      
-	  setTitle("Insert");
+	  setTitle("Add new");
 	  la_name = new JLabel("Name");
 	  la_id = new JLabel("id");
 	  la_pw = new JLabel("pw");
@@ -89,7 +89,7 @@ public class InputForm extends JFrame{
  }
  //Constructor for function windows
  public void initTF(){
-  setTitle("Insert");
+  setTitle("Add new");
   tf_name.setText("");
   tf_id.setText("");
   tf_pw.setText("");

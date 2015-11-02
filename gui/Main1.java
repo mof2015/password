@@ -1,4 +1,4 @@
-import java.awt.event.ActionEvent;
+﻿import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -53,7 +53,7 @@ public class Main1 implements MouseListener, ActionListener {
 		northp = new JPanel();
 		northp.add(label);
 
-		bt_add = new JButton("Insert");  
+		bt_add = new JButton("Add new");  
 		bt_del = new JButton("Delete");  
 		bt_up = new JButton("Edit");  
 		bt_search = new JButton("Search");  
@@ -159,7 +159,7 @@ public class Main1 implements MouseListener, ActionListener {
 				return;
 			}
 			
-			if(form.getTitle().equals("Insert")){		//insert form
+			if(form.getTitle().equals("Add new")){		//add new form
 				Object rowData[] = {name, id, pw, link};
 				dtm.addRow(rowData);
 			}
