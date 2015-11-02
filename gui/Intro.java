@@ -79,26 +79,27 @@ public class Intro extends JFrame {
 			Info gui = new Info(Intro.this);
 			gui.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			gui.setSize(300,100);
-			gui.setLocation(300,300);
+			gui.setLocation(300,500);
 			gui.setVisible(true);
 
 		}
 	}
-
+	//checks both ID and password
 	public class pwEvent implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			 String cmd = e.getActionCommand();
 
 		        if (OK.equals(cmd)) { //Process the password.
 		            char[] input = passwordField.getPassword();
-		            if (isPasswordCorrect(input)) {
+		            String id_input = idField.getText();
+		            if (isPasswordCorrect(input) && isIDCorrect(id_input)) {
 		            	new Main1();
 		    			dispose();
 
 		            } 
 		            else {
 		                JOptionPane.showMessageDialog(controllingFrame,
-		                    "Invalid password. Try again.",
+		                    "Invalid ID or Password!! Try again!",
 		                    "Error Message",
 		                    JOptionPane.ERROR_MESSAGE);
 		            }
@@ -114,8 +115,24 @@ public class Intro extends JFrame {
 		        }
 		}
 	}
+	
+	private static boolean isIDCorrect(String input) {
+		boolean isCorrect = true;
+		
+		String correctID = "MOF";
+		
+		if(input.length() != correctID.length()) {
+            isCorrect = false;
+        } else {
+            isCorrect = input.equals(correctID);
+        }
+		
+		return isCorrect;
+	}
+	
     private static boolean isPasswordCorrect(char[] input) {
         boolean isCorrect = true;
+        
         char[] correctPassword = { 'a', 's', 'd', 'f', 'g', 'h' };
 
         if (input.length != correctPassword.length) {
