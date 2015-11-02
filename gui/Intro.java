@@ -23,7 +23,7 @@ public class Intro extends JFrame {
 		add(menubar);
 		help=new JMenu ("Help");
 		menubar.add(help);
-		info=new JMenuItem("Info");
+		info=new JMenuItem("IPMS Ver.1.0");
 		help.add(info);
 		setJMenuBar(menubar);
 		event e = new event();
@@ -159,6 +159,6 @@ public class Intro extends JFrame {
 		gui.setVisible(true);
 		gui.setResizable(false);
 
-		gui.setTitle("Intro");
+		gui.setTitle("IMPS Ver.1.0");
 	}
 }
