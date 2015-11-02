@@ -24,6 +24,7 @@ public class Main1 implements MouseListener, ActionListener {
 	JTable jt;
 	DefaultTableModel dtm;
 	InputForm form;
+	SearchForm form_search;
 	int srow;
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
@@ -35,6 +36,7 @@ public class Main1 implements MouseListener, ActionListener {
 
 	public Main1() {
 		form=new InputForm();
+		form_search = new SearchForm();
 		
 		Object[][] rowData={
 				{"네이버", "test","testtest", "http://www.naver.com/"},
@@ -112,6 +114,7 @@ public class Main1 implements MouseListener, ActionListener {
 	    bt_add.addActionListener(this);
 	    bt_del.addActionListener(this);
 	    bt_up.addActionListener(this);
+	    bt_search.addActionListener(this);
 	    
 	    form.bt_input.addActionListener(this);
 	    form.bt_cancel.addActionListener(this);
@@ -216,15 +219,15 @@ public class Main1 implements MouseListener, ActionListener {
 		     
 			String name = (String) jt.getValueAt(srow,0);
 			String id  = (String) jt.getValueAt(srow,1);
-			String pw  = (String) jt.getValueAt(srow,2);
+			//String pw  = (String) jt.getValueAt(srow,2);
 			String link  = (String) jt.getValueAt(srow,3);
 			
-			form.tf_name.setText(name);
-			form.tf_id.setText(id);
-			form.tf_pw.setText(pw);
-			form.tf_link.setText(link);
-			form.initSearch();
-			form.setVisible(true);
+			form_search.tf_name.setText(name);
+			form_search.tf_id.setText(id);
+			//form.tf_pw.setText(pw);
+			form_search.tf_link.setText(link);
+			form_search.initSearch();
+			form_search.setVisible(true);
 		}
 		
 	}
