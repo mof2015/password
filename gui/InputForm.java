@@ -20,13 +20,11 @@ public class InputForm extends JFrame{
           
 	 listener = new ChangeListener()
      {
-
 		public void stateChanged(ChangeEvent e) {
 	           JSlider source = (JSlider) e.getSource();
 	           textField.setText("" + source.getValue());
 		}
      };
-
 
      slider = new JSlider();
      slider.setPaintTicks(true);
@@ -34,7 +32,6 @@ public class InputForm extends JFrame{
      slider.setMinorTickSpacing(5);     
      slider.addChangeListener(listener);
      
-
 	  setTitle("Insert");
 	  la_name = new JLabel("Name");
 	  la_id = new JLabel("id");
@@ -89,7 +86,7 @@ public class InputForm extends JFrame{
 	  setBounds(500, 500, 400, 400);
       setResizable(false);
         
- }//생성자
+ }//Constructor for function windows
  public void initTF(){
   setTitle("Insert");
   tf_name.setText("");
@@ -104,5 +101,10 @@ public class InputForm extends JFrame{
   setTitle("Edit");
  }
  
+ public void initSearch(){//Search form
+  setTitle("Search");
+  tf_name.setText("");
+  tf_name.requestFocus();
+ }
+ 
  } 
-
