@@ -1,4 +1,3 @@
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -75,18 +74,24 @@ public class Main1 implements MouseListener, ActionListener {
 		eventUp();
 
 		//create menu
-		mainMenu.add(new JMenuItem("Log out"));
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK ^ InputEvent.ALT_MASK)); //단축키설정
-		mainMenu.addSeparator(); //separator
 		mainMenu.add(new JMenuItem("Edit master password"));
+		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('E')); //Hot key Setting
 		mainMenu.add(new JMenuItem("Edit favorites"));
+		mainMenu.getItem(1).setAccelerator(KeyStroke.getKeyStroke('F')); //Hot key Setting
 		mainMenu.add(new JMenuItem("Backup"));
+		mainMenu.getItem(2).setAccelerator(KeyStroke.getKeyStroke('B', InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.add(new JMenuItem("Restore"));
+		mainMenu.getItem(3).setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.ALT_MASK)); //Hot key Setting
+		mainMenu.addSeparator(); //separator
+		mainMenu.add(new JMenuItem("Log out"));
+		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK ^ InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.addSeparator();
 		mainMenu.add(new JMenuItem("Exit"));
-
+		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('Q', InputEvent.ALT_MASK)); //Hot key Setting
 		helpMenu.add(new JMenuItem("Version"));
+		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_MASK)); //Hot key Setting
 		helpMenu.add(new JMenuItem("Info"));
+		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('I', InputEvent.CTRL_MASK)); //Hot key Setting
 
 		//add menu to menubar
 		menuBar.add(mainMenu);
@@ -103,6 +108,7 @@ public class Main1 implements MouseListener, ActionListener {
 	private void eventUp(){
 	    jt.addMouseListener(this);
 	    
+	    mainMenu.addActionListener(this);
 	    bt_add.addActionListener(this);
 	    bt_del.addActionListener(this);
 	    bt_up.addActionListener(this);
@@ -170,7 +176,7 @@ public class Main1 implements MouseListener, ActionListener {
 			jp.setVisible(true);
 		}
 		
-		else if(ob==bt_del){
+		else if(ob==bt_del){	//delete button
 			srow = jt.getSelectedRow();
 			if(srow==-1){
 				JOptionPane.showMessageDialog(jp,"Select row to delete!!");
@@ -206,6 +212,21 @@ public class Main1 implements MouseListener, ActionListener {
 			form.initUp();
 			form.setVisible(true);
 		}
+		else if(ob==bt_search){		//search button
+		     
+			String name = (String) jt.getValueAt(srow,0);
+			String id  = (String) jt.getValueAt(srow,1);
+			String pw  = (String) jt.getValueAt(srow,2);
+			String link  = (String) jt.getValueAt(srow,3);
+			
+			form.tf_name.setText(name);
+			form.tf_id.setText(id);
+			form.tf_pw.setText(pw);
+			form.tf_link.setText(link);
+			form.initSearch();
+			form.setVisible(true);
+		}
+		
 	}
 
 	 public void mouseClicked(MouseEvent e) {
@@ -240,4 +261,3 @@ public class Main1 implements MouseListener, ActionListener {
 	 }
 
 }
-
