@@ -10,28 +10,30 @@ public class Intro extends JFrame {
 	JMenu help;
 	JMenuItem info;
 	JComponent buttonPane;
-    private static String OK = "ok";
-    private static String REGISTER = "register";
-    private JFrame controllingFrame; //needed for dialogs
-    private JTextField idField;
-    private JPasswordField passwordField;
+	private static String OK = "ok";
+	private static String REGISTER = "register";
+	private JFrame controllingFrame; //needed for dialogs
+	private JTextField idField;
+	private JPasswordField passwordField;
 
 	public Intro(){
 
-		setLayout(new FlowLayout());
-		menubar = new JMenuBar();
-		add(menubar);
-		help=new JMenu ("Help");
-		menubar.add(help);
-		info=new JMenuItem("IPMS Ver.1.0");
-		help.add(info);
-		setJMenuBar(menubar);
-		event e = new event();
-		info.addActionListener(e);
+	pwEvent f=new pwEvent();
+
+	setLayout(new FlowLayout());
+	menubar = new JMenuBar();
+	add(menubar);
+	help=new JMenu ("Help");
+	menubar.add(help);
+	info=new JMenuItem("IPMS Ver.1.0");
+	help.add(info);
+	setJMenuBar(menubar);
+	event e = new event();
+	info.addActionListener(e);
 
         idField=new JTextField(10);
         passwordField = new JPasswordField(10);
-        passwordField.setActionCommand(OK);
+        passwordField.addActionListener(f);
 
         JLabel label1 = new JLabel("id: ");
         label1.setLabelFor(idField);
@@ -50,12 +52,6 @@ public class Intro extends JFrame {
         textPane.add(passwordField);
 
         add(textPane);
-		buttonPane = createButtonPanel();
-		add(buttonPane);
-
-	}
-	protected JComponent createButtonPanel() {
-		
         JPanel p = new JPanel(new GridLayout(0,1));
         JButton okButton = new JButton("OK");
         JButton registerButton = new JButton("REGISTER");
@@ -63,16 +59,15 @@ public class Intro extends JFrame {
         okButton.setActionCommand(OK);
         registerButton.setActionCommand(REGISTER);
 
-        pwEvent f=new pwEvent();
         
         okButton.addActionListener(f);
         registerButton.addActionListener(f);
 
         p.add(okButton);
         p.add(registerButton);
-
-        return p;
-    }
+        
+		add(p);
+    	}
 
 	public class event implements ActionListener{
 		public void actionPerformed(ActionEvent e){
@@ -87,34 +82,34 @@ public class Intro extends JFrame {
 	//checks both ID and password
 	public class pwEvent implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			 String cmd = e.getActionCommand();
+			String cmd = e.getActionCommand();
+			
+			if(REGISTER.equals(cmd))
+				new registerForm();
+			else{
+				char[] input = passwordField.getPassword();
+				String id_input = idField.getText();
+	        		if (isPasswordCorrect(input) && isIDCorrect(id_input)) {
+					new Main1();
+	    				dispose();
+				} 
+	         		else {
+	    				JOptionPane.showMessageDialog(controllingFrame,
+	    				"Invalid ID or Password!! Try again!",
+	    				"Error Message",
+	    				JOptionPane.ERROR_MESSAGE);
+	    			}
 
-		        if (OK.equals(cmd)) { //Process the password.
-		            char[] input = passwordField.getPassword();
-		            String id_input = idField.getText();
-		            if (isPasswordCorrect(input) && isIDCorrect(id_input)) {
-		            	new Main1();
-		    			dispose();
-
-		            } 
-		            else {
-		                JOptionPane.showMessageDialog(controllingFrame,
-		                    "Invalid ID or Password!! Try again!",
-		                    "Error Message",
-		                    JOptionPane.ERROR_MESSAGE);
-		            }
-
-		            //Zero out the possible password, for security.
-		            Arrays.fill(input, '0');
-
-		            passwordField.selectAll();
-		            resetFocus();
-		        } else { //user asked for register
-		        	new registerForm();
+	    			//Zero out the possible password, for security.
+	    			Arrays.fill(input, '0');
+	    			passwordField.selectAll();
+	    			resetFocus();
+	    		}
+			 
 		    
-		        }
-		}
+	    	}
 	}
+	
 	
 	private static boolean isIDCorrect(String input) {
 		boolean isCorrect = true;
@@ -130,25 +125,25 @@ public class Intro extends JFrame {
 		return isCorrect;
 	}
 	
-    private static boolean isPasswordCorrect(char[] input) {
-        boolean isCorrect = true;
+	private static boolean isPasswordCorrect(char[] input) {
+		boolean isCorrect = true;
         
-        char[] correctPassword = { 'a', 's', 'd', 'f', 'g', 'h' };
+		char[] correctPassword = { 'a', 's', 'd', 'f', 'g', 'h' };
 
-        if (input.length != correctPassword.length) {
-            isCorrect = false;
-        } else {
-            isCorrect = Arrays.equals (input, correctPassword);
-        }
+		if (input.length != correctPassword.length) {
+			isCorrect = false;
+		} else {
+			isCorrect = Arrays.equals (input, correctPassword);
+		}
 
         //Zero out the password.
-        Arrays.fill(correctPassword,'0');
+		Arrays.fill(correctPassword,'0');
 
-        return isCorrect;
-    }
-    protected void resetFocus() {
-        passwordField.requestFocusInWindow();
-    }
+		return isCorrect;
+	}
+	protected void resetFocus() {
+		passwordField.requestFocusInWindow();
+	}
 
 	public static void main(String args[]){
 		Intro gui =new Intro();
