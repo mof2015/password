@@ -1,4 +1,4 @@
-﻿import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -228,6 +228,10 @@ public class Main1 implements MouseListener, ActionListener {
 			form_search.tf_link.setText(link);
 			form_search.initSearch();
 			form_search.setVisible(true);
+		}
+		else if(ob==form_search.bt_cancel){
+			form.setVisible(false);
+			jp.setVisible(true);
 		}
 		
 	}
