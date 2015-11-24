@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -22,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 public class Main1 implements MouseListener, ActionListener {
 	JFrame jp = new JFrame("IPMS");
 	JTable jt;
+	JComboBox box;
 	DefaultTableModel dtm;
 	InputForm form;
 	SearchForm form_search;
@@ -33,18 +35,19 @@ public class Main1 implements MouseListener, ActionListener {
 	JLabel label;
 	JPanel northp,southp;
 	JButton bt_add, bt_del, bt_up, bt_search;
+	
+	Object[][] rowData={
+			{"네이버", "test","testtest", "http://www.naver.com/"},
+			{"블랙보드", "black","fortest", "http://kulms.korea.ac.kr/"},
+			{"다음", "daumdaum","daumtest", "http://www.daum.net/"}
+	};
+	
+	Object[] columnNames={"Name", "ID", "Password", "link"};
 
 	public Main1() {
 		form=new InputForm();
 		form_search = new SearchForm();
-		
-		Object[][] rowData={
-				{"네이버", "test","testtest", "http://www.naver.com/"},
-				{"블랙보드", "black","fortest", "http://kulms.korea.ac.kr/"},
-				{"다음", "daumdaum","daumtest", "http://www.daum.net/"}
-		};
-		
-		Object[] columnNames={"Name","id","pw","link"};
+		box = form_search.box;
 		 
 		dtm = new DefaultTableModel(rowData, columnNames);
 		jt=new JTable (dtm);
@@ -119,6 +122,8 @@ public class Main1 implements MouseListener, ActionListener {
 	    form.bt_input.addActionListener(this);
 	    form.bt_cancel.addActionListener(this);
 	    
+	    form_search.bt_input.addActionListener(this);
+	    form_search.bt_cancel.addActionListener(this);
 	 }
 	
 	 public void actionPerformed(ActionEvent e) {
@@ -135,7 +140,7 @@ public class Main1 implements MouseListener, ActionListener {
 			String link= form.tf_link.getText();
 		      
 			if(name == null  || name.length() == 0){
-		      //check nullable
+		      //check nullable	
 				JOptionPane.showMessageDialog(form, "Input name!!"); 
 				form.tf_name.requestFocus();
 				return;
@@ -217,20 +222,84 @@ public class Main1 implements MouseListener, ActionListener {
 		}
 		else if(ob==bt_search){		//search button
 		     
-			String name = (String) jt.getValueAt(srow,0);
-			String id  = (String) jt.getValueAt(srow,1);
-			//String pw  = (String) jt.getValueAt(srow,2);
-			String link  = (String) jt.getValueAt(srow,3);
+			String tf  = form_search.tf.getText();
 			
-			form_search.tf_name.setText(name);
-			form_search.tf_id.setText(id);
-			//form.tf_pw.setText(pw);
-			form_search.tf_link.setText(link);
+			form_search.tf.setText(tf);
 			form_search.initSearch();
 			form_search.setVisible(true);
 		}
+		else if(ob==form_search.bt_input) {
+			String input = form_search.tf.getText();
+			
+			if(input == null  || input.length() == 0){
+			      //check nullable
+					JOptionPane.showMessageDialog(form, "Input anything please!!"); 
+					form_search.tf.requestFocus();
+					return;
+				}
+			else
+			{
+				if(box.getSelectedItem() == "Name")
+				{
+					for(int i = 0; i < rowData.length; i++)
+					{
+						if(input.compareTo((String)rowData[i][0]) == 0)
+						{
+							form_search.setVisible(false);
+							jp.setVisible(true);
+							jt.setRowSelectionInterval(i, i);
+						}
+					}
+					form_search.setVisible(false);
+					jp.setVisible(true);
+				}
+				else if(box.getSelectedItem() == "ID")
+				{
+					for(int i = 0; i < rowData.length; i++)
+					{
+						if(input.compareTo((String)rowData[i][1]) == 0)
+						{
+							form_search.setVisible(false);
+							jp.setVisible(true);
+							jt.setRowSelectionInterval(i, i);
+						}
+					}
+					form_search.setVisible(false);
+					jp.setVisible(true);
+				}
+				else if(box.getSelectedItem() == "Password")
+				{
+					for(int i = 0; i < rowData.length; i++)
+					{
+						if(input.compareTo((String)rowData[i][2]) == 0)
+						{
+							form_search.setVisible(false);
+							jp.setVisible(true);
+							jt.setRowSelectionInterval(i, i);
+						}
+					}
+					form_search.setVisible(false);
+					jp.setVisible(true);
+				}
+				else
+				{
+					for(int i = 0; i < rowData.length; i++)
+					{
+						if(input.compareTo((String)rowData[i][3]) == 0)
+						{
+							form_search.setVisible(false);
+							jp.setVisible(true);
+							jt.setRowSelectionInterval(i, i);
+						}
+					}
+					form_search.setVisible(false);
+					jp.setVisible(true);
+				}
+			}
+			
+		}
 		else if(ob==form_search.bt_cancel){
-			form.setVisible(false);
+			form_search.setVisible(false);
 			jp.setVisible(true);
 		}
 		
