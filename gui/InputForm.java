@@ -200,4 +200,3 @@ class ProgressBarUI extends BasicProgressBarUI {
 		}
 	}
 }
-
