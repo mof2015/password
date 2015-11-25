@@ -1,3 +1,5 @@
+//이 클래스는 사실상 필요 없을듯... 자바는 다중상속이 안됩니당 ㅠㅠㅠㅠ
+
 import java.awt.*;
 import javax.swing.*;
 
