@@ -1,3 +1,5 @@
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -20,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 
-public class Main1 implements MouseListener, ActionListener {
+public class Main1 extends Intro implements MouseListener, ActionListener {
 	JFrame jp = new JFrame("IPMS");
 	JTable jt;
 	JComboBox box;
@@ -31,8 +33,12 @@ public class Main1 implements MouseListener, ActionListener {
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
 	JMenu helpMenu = new JMenu("Help");
+	JMenuItem logOut = new JMenuItem("Log Out");
+	JMenuItem exit = new JMenuItem("Exit");
+	JMenuItem version = new JMenuItem("Version");
+	JMenuItem info = new JMenuItem("Info");
 	JScrollPane scroll;
-	JLabel label;
+	JLabel label, label_info;
 	JPanel northp,southp;
 	JButton bt_add, bt_del, bt_up, bt_search;
 	
@@ -88,15 +94,16 @@ public class Main1 implements MouseListener, ActionListener {
 		mainMenu.add(new JMenuItem("Restore"));
 		mainMenu.getItem(3).setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.addSeparator(); //separator
-		mainMenu.add(new JMenuItem("Log out"));
+		
+		mainMenu.add(logOut);
 		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK ^ InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.addSeparator();
-		mainMenu.add(new JMenuItem("Exit"));
+		mainMenu.add(exit);
 		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('Q', InputEvent.ALT_MASK)); //Hot key Setting
-		helpMenu.add(new JMenuItem("Version"));
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_MASK)); //Hot key Setting
-		helpMenu.add(new JMenuItem("Info"));
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('I', InputEvent.CTRL_MASK)); //Hot key Setting
+		//mainMenu.add(version);
+		//mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_MASK)); //Hot key Setting
+		helpMenu.add(info);
+		helpMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('I', InputEvent.CTRL_MASK)); //Hot key Setting
 
 		//add menu to menubar
 		menuBar.add(mainMenu);
@@ -104,8 +111,8 @@ public class Main1 implements MouseListener, ActionListener {
 
 		//add menubar
 		jp.setJMenuBar(menuBar);
-
-
+		
+		
 	    jp.setLocationRelativeTo(null);
 	    jp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -114,6 +121,7 @@ public class Main1 implements MouseListener, ActionListener {
 	    jt.addMouseListener(this);
 	    
 	    mainMenu.addActionListener(this);
+	    helpMenu.addActionListener(this);
 	    bt_add.addActionListener(this);
 	    bt_del.addActionListener(this);
 	    bt_up.addActionListener(this);
@@ -124,6 +132,10 @@ public class Main1 implements MouseListener, ActionListener {
 	    
 	    form_search.bt_input.addActionListener(this);
 	    form_search.bt_cancel.addActionListener(this);
+	    
+	    logOut.addActionListener(this);
+	    exit.addActionListener(this);
+	    info.addActionListener(this);
 	 }
 	
 	 public void actionPerformed(ActionEvent e) {
@@ -248,6 +260,7 @@ public class Main1 implements MouseListener, ActionListener {
 							form_search.setVisible(false);
 							jp.setVisible(true);
 							jt.setRowSelectionInterval(i, i);
+							return;
 						}
 					}
 					form_search.setVisible(false);
@@ -262,9 +275,10 @@ public class Main1 implements MouseListener, ActionListener {
 							form_search.setVisible(false);
 							jp.setVisible(true);
 							jt.setRowSelectionInterval(i, i);
+							return;
 						}
 					}
-					form_search.setVisible(false);
+					form_search.setVisible(true);
 					jp.setVisible(true);
 				}
 				else if(box.getSelectedItem() == "Password")
@@ -276,6 +290,7 @@ public class Main1 implements MouseListener, ActionListener {
 							form_search.setVisible(false);
 							jp.setVisible(true);
 							jt.setRowSelectionInterval(i, i);
+							return;
 						}
 					}
 					form_search.setVisible(false);
@@ -285,11 +300,12 @@ public class Main1 implements MouseListener, ActionListener {
 				{
 					for(int i = 0; i < rowData.length; i++)
 					{
-						if(input.compareTo((String)rowData[i][3]) == 0)
+						if(input.compareTo((String)rowData[i][3]) == 0 || ((String) rowData[i][3]).contains(input))
 						{
 							form_search.setVisible(false);
 							jp.setVisible(true);
 							jt.setRowSelectionInterval(i, i);
+							return;
 						}
 					}
 					form_search.setVisible(false);
@@ -302,7 +318,27 @@ public class Main1 implements MouseListener, ActionListener {
 			form_search.setVisible(false);
 			jp.setVisible(true);
 		}
-		
+		//DB연동이 아직 안됐으므로 로그아웃 후 재로그인시 수정 데이터는 모두 저장되지 않음
+		else if(ob==logOut){
+			jp.setVisible(false);
+			Intro gui =new Intro();
+			gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			gui.setSize(500,300);
+			gui.setLocationRelativeTo(null);
+
+			gui.setVisible(true);
+			gui.setResizable(false);
+
+			gui.setTitle("IMPS Ver.1.0");
+		}
+		else if(ob==exit){
+			jp.setVisible(false);
+		}
+		else if(ob==info){
+			
+			JOptionPane.showMessageDialog(helpMenu, "Copyright (C) Korea University Information Security MOF Team", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+		}
 	}
 
 	 public void mouseClicked(MouseEvent e) {
