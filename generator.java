@@ -10,6 +10,7 @@ public class Generator {
 	 * 2: 특수문자 포함 여부를 반영할 수 있어야 한다
 	 * 3: 연속되는 세 개 이상의 숫자/문자가 없어야 한다
 	 */
+	
 	public static int randInt(int min, int max) {
 
 	    Random rand = new Random();
@@ -18,14 +19,64 @@ public class Generator {
 	    int randomNum = rand.nextInt((max - min) + 1) + min;
 	    return randomNum;
 	}
-	
+
+	public static void createPassword(StringBuffer sb, String includeNum, String includeChar,
+			int length,String stra,String strn, String strsp, int max, int min){
+		int numCount=0;
+		int charCount=0;
+		int rand1=0;
+		int tea=0;
+		int ten=0;
+		int tes=0;
+		Random r = new Random();
+        while(sb.length()<includeNum.length()+includeChar.length()){
+			if(numCount+charCount==length){
+				//end
+			}
+			else if(numCount==includeNum.length()){
+				sb.append(includeChar.charAt(charCount));
+				charCount++;
+			}
+			else if(charCount==includeChar.length()){
+				sb.append(includeNum.charAt(numCount));
+				numCount++;
+			}
+			else{
+				rand1=randInt(1,2);
+				if(rand1==1){
+					sb.append(includeNum.charAt(numCount));
+					numCount++;
+				}
+				else{
+					sb.append(includeChar.charAt(charCount));
+					charCount++;
+				}
+			}
+		}
+        while(sb.length()<min){
+			rand1=randInt(1,2);
+			if(rand1==1){
+		        tea=r.nextInt(stra.length());
+				sb.append(stra.charAt(tea));
+			}
+			else{
+		   		ten=r.nextInt(strn.length());
+				sb.append(strn.charAt(ten));
+			}
+        	
+        }
+   		
+
+	}
+
 	public static void main(String arg[]){
 		Scanner scan = new Scanner(System.in);
 		int min=8;		//문자열 최저길이 지정
 		int max=15;		//문자열 최대길이 지정, 없으면 0
 		int self_password=1;
 		//기억하고자 하는 비밀번호라면 1, 임의로 생성될 비밀번호라면 0
-		int type=3;
+		int type=3
+				;
 		//저장되는 비밀번호의 제약조건에 따라 결정됨
 		/* type 1: 특수문자 가능, 특수문자 없어도 됨, 혼합필수, 연속문자 가능
 		 * type 2: 특수문자 가능, 특수문자 없어도 됨, 혼합 없어도 됨, 연속문자 가능
@@ -46,8 +97,6 @@ public class Generator {
         
         Random r = new Random();
         int length;
-        length=randInt(min,max);
-        sb=new StringBuffer(length);      
  
         if(self_password==1){
         	do{
@@ -68,14 +117,22 @@ public class Generator {
         			if(!includeNum.matches(digits))
         				System.out.println("Invalid input : Only digits!");
         		}while(includeNum.length()>min||!includeNum.matches(digits));
-        	if((includeChar.length()+includeNum.length())>length)
+        	if((includeChar.length()+includeNum.length())>max)
         		System.out.println("The inserted character and number are too long!");
         	else{
-        		sb=new StringBuffer(length);
+
         	}
-        	System.out.println("The set length is "+length);	
-        	}while((includeChar.length()+includeNum.length())>length);
+        	}while((includeChar.length()+includeNum.length())>max);
         }
+
+        
+        if(self_password==1)
+        	length=randInt(includeNum.length()+includeChar.length(),max);
+        else
+        	length=randInt(min,max);
+            sb=new StringBuffer(length);      
+        	System.out.println("The set length is "+length);	
+        
         /*비밀번호를 만들 때 필요할 문자열 및 숫자열을 생성한다*/
         	int tea;
         	int ten;
@@ -84,144 +141,62 @@ public class Generator {
         	int rand2=0;
  
         if(self_password==1){//비밀번호에 필요한 문자열과 숫자열을 입력했을 경우
-        	if(type==1||type==2){
+        	if(type==1){
         		//type 1: 특수문자 가능, 제약 없음
-        		//type 2: 특수문자 가능, 문자or숫자or특수문자 중 2개 이상 혼합 필수
-        		int numCount=0;
-        		int charCount=0;
-        		while(sb.length()<includeNum.length()+includeChar.length()){
-        			if(numCount+charCount==length){
-        				//end
-        			}
-        			else if(numCount==includeNum.length()){
-        				sb.append(includeChar.charAt(charCount));
-        				charCount++;
-        			}
-        			else if(charCount==includeChar.length()){
-        				sb.append(includeNum.charAt(numCount));
-        				numCount++;
-        			}
-        			else{
-        				rand1=randInt(1,2);
-        				if(rand1==1){
-        					sb.append(includeNum.charAt(numCount));
-        					numCount++;
-        				}
-        				else{
-        					sb.append(includeChar.charAt(charCount));
-        					charCount++;
-        				}
-        				System.out.println(sb.toString());
-        			}
-        		}
+        		//type 2: 특수문자 가능, 문자or숫자or특수문자 중 2개 이상 혼합 필수        		
+        		createPassword(sb, includeNum, includeChar, length, stra,strn,strsp,max,min);
+				System.out.println(sb.toString());
+        	}
+        	else if(type==2){
+        		createPassword(sb, includeNum, includeChar, length, stra,strn,strsp,max,min);
         		while(sb.length()<length){
         			rand1=randInt(0,sb.length()-1);
         			tes=r.nextInt(strsp.length());
         			sb.insert(rand1,strsp.charAt(tes));
         		}
+				System.out.println(sb.toString());
         	}
         	else if(type==3){
         		/*type 3: 특수문자 가능, 문자or숫자or특수문자 중 2개 이상 혼합 필수, 
         		 * 숫자 or 문자 등을 연속해서 3개 이상 사용 금지
         		 */
-        		int numCount=0;
-        		int charCount=0;
-        		int consecNum=0;
-        		int consecChar=0;
-        		int consecSp=0;
-    			do{
-        			while(sb.length()<length){        		
-    					tes=r.nextInt(strsp.length());
-    					
-    					if(numCount+charCount==length){
-            				//end
-            			}
-            			else if(numCount==includeNum.length()){
-            				rand1=randInt(1,2);
-            				if(rand1==1){
-            					sb.append(includeChar.charAt(charCount));
-            					charCount++;
-            					consecChar++;
-            					consecNum=0;
-            					consecSp=0;
-            				}
-            				else{
-            					sb.append(strsp.charAt(tes));
-    							consecChar=0;
-    							consecNum=0;
-    							consecSp++;
-            				}
-            			}
-            			else if(charCount==includeChar.length()){
-            				rand1=randInt(1,2);
-            				if(rand1==1){
-            					sb.append(includeNum.charAt(numCount));
-            					numCount++;
-            					consecNum++;
-            					consecNum=0;
-            					consecSp=0;
-            				}
-            				else{
-            					sb.append(strsp.charAt(tes));
-    							consecChar=0;
-    							consecNum=0;
-    							consecSp++;
-            				}
-            			}
-            			else{
-            				rand1=randInt(1,3);
-    						if(rand1==1){
-    							sb.append(includeNum.charAt(numCount));
-    							numCount++;
-    							consecChar++;
-    							consecNum=0;
-    							consecSp=0;
-    						}
-    						else if(rand1==2){
-    							sb.append(includeChar.charAt(charCount));
-    							charCount++;
-    							consecChar=0;
-    							consecNum++;
-    							consecSp=0;
-    						}
-    						else if(rand1==3){
-    							sb.append(strsp.charAt(tes));
-    							consecChar=0;
-    							consecNum=0;
-    							consecSp++;
-    						}
-    						else{
-    							//
-    						}
-            			}
-    						if(consecNum>2||consecChar>2||consecSp>2){
-    							sb = new StringBuffer(length);
-    							consecChar=0;
-    							consecNum=0;
-    							consecSp=0;
-    							numCount=0;
-    							charCount=0;
-    						}
-    					if(numCount!=includeNum.length()||charCount!=includeChar.length()){
-    						if(length<max)
-    							sb=new StringBuffer(length+1);
-    						else
-    							sb=new StringBuffer(length);
-    						consecChar=0;
-    						consecNum=0;
-    						consecSp=0;
-    						numCount=0;
-    						charCount=0;
-    					}
-        			}
-        		System.out.println(sb.toString());
-    			}while(numCount!=includeNum.length()||charCount!=includeChar.length()
-    					||consecNum>2||consecChar>2||consecSp>2);
-        	}
-        	else{
+        		String tempString=new String();
+        		String tempString2=new String();
+        		int temp=2;
+        		int trials=0;
         		
+        		do{
+        			sb=new StringBuffer();
+        		createPassword(sb, includeNum, includeChar, length, stra,strn,strsp,max,min);
+				System.out.println("Initial="+sb.toString());
+        		while(temp<=sb.length()-1){
+        			tempString=(sb.toString()).substring(temp-2, temp+1);
+        			System.out.println("tempString은?: "+tempString);
+        			if(tempString.matches(chars)||tempString.matches(digits)){
+        				tempString2=(sb.toString()).substring(temp, sb.length());
+        				System.out.println("연속하는 숫자 or 문자: "+tempString);
+        				sb.delete(temp, sb.length());
+        				System.out.println("제거된 문자열: "+sb.toString());        				
+                		tes=r.nextInt(strsp.length());
+                		sb.append(strsp.charAt(tes));
+        				System.out.println("랜덤값 추가열: "+sb.toString());        				
+                		sb.append(tempString2);
+        				System.out.println("뒷부분 추가열: "+sb.toString());        				
+        				System.out.println(sb.toString());
+        				temp=temp+3;
+        			}
+        			temp=temp+1;
+        		}
+        		
+        		trials++;
+        		}while(sb.length()>max&&trials<10);	//변형을 한 string이 max를 넘으면 다시 한다
+        		if(trials==10)
+        			System.out.println("Failure");
+        		else
+    				System.out.println(sb.toString());
         	}
         }
+        
         else{				//임의로 비밀번호를 생성하는 경우           	
         	if(type==1){
         		//type 1: 특수문자 가능, 제약 없음
@@ -240,6 +215,7 @@ public class Generator {
         				sb.append(strsp.charAt(tes));
         			}
         		}
+        		System.out.println(sb.toString());
         	}
         	else if(type==2){
         		//type 2: 특수문자 가능, 문자or숫자or특수문자 중 2개 이상 혼합 필수
@@ -262,6 +238,7 @@ public class Generator {
         			}
         		}while(sb.toString().matches(digits)||sb.toString().matches(chars)
         				||sb.toString().matches(spChars));
+        		System.out.println(sb.toString());
         	}
         	else if(type==3){
         		/*type 3: 특수문자 가능, 문자or숫자or특수문자 중 2개 이상 혼합 필수, 
@@ -300,27 +277,11 @@ public class Generator {
     					spCounter=0;
     				}
     			}
+    			System.out.println(sb.toString());
     		}
          	else{
         		System.out.println("Invalid password configuration");        		
         	}
 		}
-   	System.out.println(sb.toString());
 	}
 }    	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
