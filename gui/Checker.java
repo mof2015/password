@@ -1,4 +1,4 @@
-import java.util.*;
+﻿import java.util.*;
 import java.io.*;
 import java.lang.*;
 import java.math.*;
@@ -74,28 +74,29 @@ public class Checker {
 //-------------------------점수 측정------------------------------------------------------
 	
 		score+=st.length()*6;
-		System.out.println("Criteria 1(길이): Score + "+st.length()+"*"+"6 " + "= "+score);
+//		System.out.println("Criteria 1(길이): Score + "+st.length()+"*"+"6 " + "= "+score);
 		//길이에 따른 점수 가점
 		score+=includeSp*8;
-		System.out.println("Criteria 2(특수문자 개수): Score + "+includeSp+"*"+"8 " + "= "+score);
+//		System.out.println("Criteria 2(특수문자 개수): Score + "+includeSp+"*"+"8 " + "= "+score);
 		//특수문자 개수에 따른 점수 가점
 
 		score-=consecInt[2]*4;
-		System.out.println("Criteria 3(연속되는 숫자): Score - "+consecInt[2]+"*"+"4 " + "= "+score);
+//		System.out.println("Criteria 3(연속되는 숫자): Score - "+consecInt[2]+"*"+"4 " + "= "+score);
 		//연속되는 숫자에 따른 점수 감점
 		score-=consecChar[2]*8;
-		System.out.println("Criteria 4(연속되는 문자): Score - "+consecChar[2]+"*"+"4 " + "= "+score);
+//		System.out.println("Criteria 4(연속되는 문자): Score - "+consecChar[2]+"*"+"4 " + "= "+score);
 		//연속되는 문자에 따른 점수 감점
 		if(includeInt*includeChar==0){
 			score-=20;
-			System.out.println("Criteria 5(숫자와 문자가 다 포함되는가): Score - 20 " + "= "+score);
+//			System.out.println("Criteria 5(숫자와 문자가 다 포함되는가): Score - 20 " + "= "+score);
 		}
 		//숫자와 문자 중 안 들어간 게 있으면 감점
 		score-=existWord*10;
-		System.out.println("Criteria 6(사전에 정의된 단어): Score - "+existWord+"*"+"10 " + "= "+score);
+//		System.out.println("Criteria 6(사전에 정의된 단어): Score - "+existWord+"*"+"10 " + "= "+score);
 		return score;
 		//최종점수 반환
 	}
+	/*
 	public static void main(String[] args){
 		Checker check = new Checker();
 		Scanner input= new Scanner(System.in);
@@ -103,4 +104,5 @@ public class Checker {
 		String password = input.next();
 		System.out.print("Password score: "+check.checker(password));		
 	}
+	*/
 }

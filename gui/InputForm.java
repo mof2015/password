@@ -53,7 +53,8 @@ public class InputForm extends JFrame{
 
 		listenForProgressBar=new DocumentListener(){
 			public void stren(){
-				strength.setValue(tf_pw.getDocument().getLength());
+				Checker check = new Checker();
+				strength.setValue(check.checker(tf_pw.getText()));
 			}
 
 			public void changedUpdate(DocumentEvent e) {
