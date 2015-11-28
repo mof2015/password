@@ -1,4 +1,4 @@
-package db_connec_test;
+package db_connect;
 
 import java.sql.*;
 import java.awt.*;
@@ -103,6 +103,19 @@ public class Intro extends JFrame {
 				@SuppressWarnings("deprecation")
 				String input = passwordField.getText();
 				String id_input = idField.getText();
+					if(id_input.length() == 0) {
+						JOptionPane.showMessageDialog(controllingFrame,
+								"Please enter your ID!",
+								"Error Message",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					} else if(input.length() == 0) {
+						JOptionPane.showMessageDialog(controllingFrame,
+								"Please enter your password",
+								"Error Message",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 	        		try {
 						if (isIDCorrect(id_input, input)) {
 						try {
