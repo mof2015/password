@@ -1,4 +1,4 @@
-﻿import java.util.*;
+import java.util.*;
 import java.io.*;
 import java.lang.*;
 import java.math.*;
@@ -18,6 +18,7 @@ public class Checker {
 		int includeInt=0;
 		int includeChar=0;
 		int includeSp=0;
+		int existNum=0;
 		int existWord=0;
 		int consecInt[] = new int[3];
 		int consecChar[] = new int[3];
@@ -44,6 +45,7 @@ public class Checker {
 				consecChar[1]=0;
 				//연속된 문자 초기화
 				includeInt++;
+				existNum = 1;
 			}
 			/* 숫자가 포함되어있을 경우, 연속되는 숫자의 유무를 확인.
 			 * 3개 이상의 숫자가 연속되어 있으면 그만큼을 계산해서 나중에 뺌
@@ -59,6 +61,7 @@ public class Checker {
 				consecInt[1]=0;
 				//연속된 숫자 초기화
 				includeChar++;
+				existWord = 1;
 			}
 		}
 //-------------------------문자열 전체에 대한 password check----------------------------------
@@ -80,18 +83,35 @@ public class Checker {
 //		System.out.println("Criteria 2(특수문자 개수): Score + "+includeSp+"*"+"8 " + "= "+score);
 		//특수문자 개수에 따른 점수 가점
 
-		score-=consecInt[2]*4;
+		score-=consecInt[2]*24;
 //		System.out.println("Criteria 3(연속되는 숫자): Score - "+consecInt[2]+"*"+"4 " + "= "+score);
 		//연속되는 숫자에 따른 점수 감점
-		score-=consecChar[2]*8;
+		score-=consecChar[2]*24;
 //		System.out.println("Criteria 4(연속되는 문자): Score - "+consecChar[2]+"*"+"4 " + "= "+score);
 		//연속되는 문자에 따른 점수 감점
 		if(includeInt*includeChar==0){
 			score-=20;
 //			System.out.println("Criteria 5(숫자와 문자가 다 포함되는가): Score - 20 " + "= "+score);
 		}
-		//숫자와 문자 중 안 들어간 게 있으면 감점
-		score-=existWord*10;
+		
+		//부분 문자열이 중복되는 경우 감점
+		for(int i = 1; i < st.length() / 2; i++)
+		{
+			for(int j = 0; j < i; j++)
+			{
+				String sub = st.substring(j, j + i);
+				if(st.substring(j + i + 1, st.length() - 1).contains(sub))
+				{
+					score -= 20;
+				}
+			}
+		}
+		
+		
+		//숫자와 문자 중 안 들어간 게 있으면 빵점
+		//score-=existWord*10;
+		score *= existWord;
+		score *= existNum;
 //		System.out.println("Criteria 6(사전에 정의된 단어): Score - "+existWord+"*"+"10 " + "= "+score);
 		return score;
 		//최종점수 반환
