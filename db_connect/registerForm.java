@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -21,6 +22,7 @@ public class registerForm extends JFrame{
 	 JTextField tf_mail;
 	 JPasswordField tf_pw, tf_confirm;
 	 JButton bt_input, bt_cancel;
+	 private JFrame controllingFrame;
 
 	 public static Connection con;
 	 public static Statement st;
@@ -94,11 +96,49 @@ public class registerForm extends JFrame{
 
 	  bt_input.addActionListener(new ActionListener () {
 		  public void actionPerformed(ActionEvent e) {
-				String id_input = tf_id.getText();
-				String mail_input = tf_mail.getText();
-				String name_input = tf_name.getText();
-				String pw_input = tf_pw.getText();
-				
+			  String id_input = tf_id.getText();
+			  String mail_input = tf_mail.getText();
+			  String name_input = tf_name.getText();
+			  String pw_input = tf_pw.getText();
+			  String confirm_input = tf_confirm.getText();
+			  
+			  if(id_input.length() == 0) {
+				  JOptionPane.showMessageDialog(controllingFrame,
+							"Please enter your ID!",
+							"Error Message",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+			  } else if(mail_input.length() == 0) {
+				  JOptionPane.showMessageDialog(controllingFrame,
+							"Please enter your email!",
+							"Error Message",
+							JOptionPane.ERROR_MESSAGE);
+					return;				  
+			  } else if(name_input.length() == 0) {
+				  JOptionPane.showMessageDialog(controllingFrame,
+							"Please enter your name!",
+							"Error Message",
+							JOptionPane.ERROR_MESSAGE);
+					return;				  
+			  } else if(pw_input.length() == 0) {
+				  JOptionPane.showMessageDialog(controllingFrame,
+							"Please enter your password!",
+							"Error Message",
+							JOptionPane.ERROR_MESSAGE);
+					return;				  
+			  } else if(confirm_input.length() == 0) {
+				  JOptionPane.showMessageDialog(controllingFrame,
+							"Please enter password confirm!",
+							"Error Message",
+							JOptionPane.ERROR_MESSAGE);
+					return;				  
+			  } else if(!pw_input.equals(confirm_input)) {
+				  JOptionPane.showMessageDialog(controllingFrame,
+							"Pasword and confirm doesn't match!",
+							"Error Message",
+							JOptionPane.ERROR_MESSAGE);
+					return;				  
+			  }
 				
 			  String sql = "INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES ('"+id_input+"','"+pw_input+"','"+name_input+"','"+mail_input+"')";
 				try {
