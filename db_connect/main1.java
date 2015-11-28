@@ -313,6 +313,15 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			pw_edit = pw;
 			String link  = (String) jt.getValueAt(srow,3);
 			url_edit = link;
+			
+			String sql = "DELETE FROM `keys` WHERE `acnt_no` = "+id_num+" and `title` = '"+name_edit+"' and `pw_sequence` = '"+pw_edit+"' and `url` = '"+url_edit+"'"; 
+			try {
+				st.executeUpdate(sql);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}			
+			
 			for(int i=0; i<jt.getRowCount(); i++){
 				if(name.equals(jt.getValueAt(i,0)) && id.equals(jt.getValueAt(i, 1)) && pw.equals(jt.getValueAt(i, 2)) && link.equals(jt.getValueAt(i,3))){
 					dtm.removeRow(i);
