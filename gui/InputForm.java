@@ -19,7 +19,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
-
 public class InputForm extends JFrame{
 	JLabel la_name, la_id, la_pw, la_link, la_stren, la_len;
 	JTextField tf_name, tf_id, tf_pw, tf_link, tf_len;
@@ -37,7 +36,6 @@ public class InputForm extends JFrame{
 		la_stren = new JLabel ("Strength");
 		la_len = new JLabel ("Length");
 		
-
 		tf_name = new JTextField();
 		tf_id = new JTextField();
 		tf_pw = new JTextField();
@@ -46,15 +44,18 @@ public class InputForm extends JFrame{
 		bt_input = new JButton("OK");
 		bt_cancel = new JButton("Cancel");
 		listenForSlider = new ChangeListener(){
-			public void stateChanged(ChangeEvent e) {
-				Generator my=new Generator();				
-				slider = (JSlider) e.getSource();
-				tf_len.setText("" + slider.getValue());
-				my.length=slider.getValue();
-				tf_pw.setText(my.getPassword());
+			
+		//password strength state display
+		public void stateChanged(ChangeEvent e) {
+			Generator my=new Generator();				
+			slider = (JSlider) e.getSource();
+			tf_len.setText("" + slider.getValue());
+			my.length=slider.getValue();
+			tf_pw.setText(my.getPassword());
 			}
 		};
-
+		
+		//password strength measurement
 		listenForProgressBar=new DocumentListener(){
 			public void stren(){
 				Checker check = new Checker();
@@ -79,17 +80,17 @@ public class InputForm extends JFrame{
         strength.setUI(new ProgressBarUI());
         tf_pw.getDocument().addDocumentListener(listenForProgressBar);
         
-		slider = new JSlider(1,20,10);
+		slider = new JSlider(8,20,10);
 		slider.setPaintTicks(true);
 		slider.setMajorTickSpacing(5);
 		slider.setMinorTickSpacing(1);     
 		slider.addChangeListener(listenForSlider);
 		slider.setBounds(75,170,230,50);
 		
-
 		setTitle("Add new");
 		setLayout(null);
 	 
+		//UI setting
 		la_name.setBounds(30, 30, 60, 30);
 		la_id.setBounds(30, 80, 30, 30);
 		la_pw.setBounds(30, 130, 30, 30);
@@ -108,6 +109,7 @@ public class InputForm extends JFrame{
 	  
 		tf_len.setBounds(310,170,50,30);
 	  
+		//Component addition
 		add(tf_len);
 		add(la_name);
 		add(la_id);
