@@ -8,12 +8,12 @@ public class Checker {
 	 * 다음과 같은 조건을 확인하여야 한다
 	 * 1. 패스워드 길이
 	 * 2. 패스워드의 특수문자 포함 여부
-	 * 3. 패스워드에서 사전적 의미가 포함되는 단어가 있는가(ex. apple)
-	 * 4. 패스워드에서 연속적인 단어열 혹은 문자열이 포함되는가(ex. 12345, abcde)
-	 * 5. 패스워드에서 반복되는 숫자나 문자가 포함되는가(ex. 11111, aaaaa)
-	 * 6. ?
+	 * 3. 패스워드에서 연속적인 단어열 혹은 문자열이 포함되는가(ex. 12345, abcde)
+	 * 4. 패스워드의 일부 문자열이 반복되는 경우(ex. abc12abc90abc)
+	 * 5. 패스워드에서 3회이상 연속 반복되는 숫자나 문자가 포함되는가(ex. 11111, aaaaa)
+	 * 6. 패스워드에 숫자,문자 조합 여부 (숫자 혹은 문자만으로 이루어진 패스워드는 인정하지 않음)
 	 */
-	public int checker(String st){
+	public int checker(String st) throws IOException{
 		int score=0;
 		int includeInt=0;
 		int includeChar=0;
@@ -65,33 +65,27 @@ public class Checker {
 			}
 		}
 //-------------------------문자열 전체에 대한 password check----------------------------------
-/*		FileReader fr = new FileReader("dictionary.txt");
+		FileReader fr = new FileReader("common.txt");
 		BufferedReader br = new BufferedReader(fr);
 		String tempStr="";
 		while( (tempStr=br.readLine())!=null){
 			if(st.contains(tempStr)){
-				existWord++;
+				score -= 10;
 			}
 		}
-		fr.close();*/
+		fr.close();
 //-------------------------점수 측정------------------------------------------------------
 	
-		score+=st.length()*6;
-//		System.out.println("Criteria 1(길이): Score + "+st.length()+"*"+"6 " + "= "+score);
+		score+=st.length()*3;
 		//길이에 따른 점수 가점
-		score+=includeSp*8;
-//		System.out.println("Criteria 2(특수문자 개수): Score + "+includeSp+"*"+"8 " + "= "+score);
+		score+=includeSp*4;
 		//특수문자 개수에 따른 점수 가점
-
-		score-=consecInt[2]*24;
-//		System.out.println("Criteria 3(연속되는 숫자): Score - "+consecInt[2]+"*"+"4 " + "= "+score);
+		score-=consecInt[2]*12;
 		//연속되는 숫자에 따른 점수 감점
-		score-=consecChar[2]*24;
-//		System.out.println("Criteria 4(연속되는 문자): Score - "+consecChar[2]+"*"+"4 " + "= "+score);
+		score-=consecChar[2]*12;
 		//연속되는 문자에 따른 점수 감점
 		if(includeInt*includeChar==0){
-			score-=20;
-//			System.out.println("Criteria 5(숫자와 문자가 다 포함되는가): Score - 20 " + "= "+score);
+			score-=10;
 		}
 		
 		//부분 문자열이 중복되는 경우 감점
@@ -107,22 +101,20 @@ public class Checker {
 			}
 		}
 		
+		//3회이상 연속 반복되는 숫자나 문자가 포함되는 경우 감점
+		for(int i = 0; i < st.length() - 3; i++)
+		{
+			if(st.charAt(i) == st.charAt(i + 1) && st.charAt(i) == st.charAt(i + 2))
+			{
+				score -= 10;
+			}
+		}
 		
-		//숫자와 문자 중 안 들어간 게 있으면 빵점
-		//score-=existWord*10;
+		//숫자,문자 중 안 들어간 게 있으면 빵점 - 둘 다 포함된 경우 existWord, existNum값은 1로 설정됨
 		score *= existWord;
 		score *= existNum;
-//		System.out.println("Criteria 6(사전에 정의된 단어): Score - "+existWord+"*"+"10 " + "= "+score);
+
 		return score;
 		//최종점수 반환
 	}
-	/*
-	public static void main(String[] args){
-		Checker check = new Checker();
-		Scanner input= new Scanner(System.in);
-		System.out.print("Please enter a Password: ");
-		String password = input.next();
-		System.out.print("Password score: "+check.checker(password));		
-	}
-	*/
 }
