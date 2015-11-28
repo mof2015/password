@@ -23,7 +23,7 @@ public class Intro extends JFrame {
 	private JTextField idField;
 	private JPasswordField passwordField;
 	 public static Connection con;
-	 public static Statement st;
+	 public static PreparedStatement st;
 	 public static ResultSet rs;
 	 
 	 public static String correct_id;
@@ -97,9 +97,14 @@ public class Intro extends JFrame {
 		public void actionPerformed(ActionEvent e){
 			String cmd = e.getActionCommand();
 			
-			if(REGISTER.equals(cmd))
-				new registerForm();
-			else{
+			if(REGISTER.equals(cmd)) {
+				try {
+					new registerForm();
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+			} else {
 				@SuppressWarnings("deprecation")
 				String input = passwordField.getText();
 				String id_input = idField.getText();
@@ -151,10 +156,20 @@ public class Intro extends JFrame {
 	
 	private static boolean isIDCorrect(String input, String input_pw) throws SQLException {
 		boolean isCorrect = true;
-
+		
 		con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof", "root", "1234");
-		st = con.createStatement();
-
+		st = con.prepareStatement("SELECT * FROM `account` WHERE `id`=? AND `pw`=?");
+		st.setString(1, input);
+		st.setString(2, input_pw);
+		
+		rs = st.executeQuery();
+		
+		if(rs.next()) {
+			no_id = rs.getInt("no");
+		} else {
+			isCorrect = false;
+		};
+/*
 		String sql = null;
 		
 		sql = "select * from account";
@@ -219,7 +234,7 @@ public class Intro extends JFrame {
 					}
 				}	
 			}
-		}		
+		}	*/	
 		
 		return isCorrect;
 	}
