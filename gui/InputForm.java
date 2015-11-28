@@ -36,6 +36,7 @@ public class InputForm extends JFrame{
 		la_link = new JLabel ("link");
 		la_stren = new JLabel ("Strength");
 		la_len = new JLabel ("Length");
+		
 
 		tf_name = new JTextField();
 		tf_id = new JTextField();
@@ -46,8 +47,11 @@ public class InputForm extends JFrame{
 		bt_cancel = new JButton("Cancel");
 		listenForSlider = new ChangeListener(){
 			public void stateChanged(ChangeEvent e) {
+				Generator my=new Generator();				
 				slider = (JSlider) e.getSource();
 				tf_len.setText("" + slider.getValue());
+				my.length=slider.getValue();
+				tf_pw.setText(my.getPassword());
 			}
 		};
 
