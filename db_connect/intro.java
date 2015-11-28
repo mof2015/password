@@ -27,6 +27,7 @@ public class Intro extends JFrame {
 	 public static ResultSet rs;
 	 
 	 public static String correct_id;
+	 public static int no_id;
 
 	public Intro(){
 
@@ -105,7 +106,8 @@ public class Intro extends JFrame {
 	        		try {
 						if (isIDCorrect(id_input, input)) {
 						try {
-							new Main1();
+							System.out.println(no_id);
+							new Main1(no_id);
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -186,42 +188,29 @@ public class Intro extends JFrame {
 				} else {
 					isCorrect = input_pw.equals(str);
 					if(isCorrect)
+					{
+						sql = "select no from account where id = '"+correct_id+"' and pw = '"+str+"'";
+						rs = st.executeQuery(sql);
+						
+						if (st.execute(sql)) {
+							rs = st.getResultSet();
+						}
+				
+						while (rs.next()) {
+							int number = rs.getInt("no");
+							no_id = number;
+							break;
+						}							
+				
 						break;
+					}
 				}	
 			}
 		}		
 		
 		return isCorrect;
 	}
-	/*
-	private static boolean isPasswordCorrect(char[] input) throws SQLException {
-		boolean isCorrect = true;
-		
-		con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof", "root", "1234");
-		st = con.createStatement();
 
-		String sql = null;
-		
-		sql = "select * from account where id = '"+correct_id+"'";
-
-		rs = st.executeQuery(sql);
-		
-		if (st.execute(sql)) {
-			rs = st.getResultSet();
-		}
-
-		while (rs.next()) {
-			String str = rs.getString("pw");
-			
-			if (input.length != str.length()) {
-				isCorrect = false;
-			} else {
-				isCorrect = input.equals(str);
-			}	
-		}
-        
-		return isCorrect;
-	}*/
 	protected void resetFocus() {
 		passwordField.requestFocusInWindow();
 	}
