@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,7 +22,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-
 
 
 public class Main1 extends Intro implements MouseListener, ActionListener {
@@ -179,13 +181,25 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			if(form.getTitle().equals("Add new")){		//add new form
 				Object rowData[] = {name, id, pw, link};
 				dtm.addRow(rowData);
+				try {
+					fileSave();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 			else {	//edit form
 				jt.setValueAt(name, srow, 0);	//edit name
 				jt.setValueAt(id, srow, 1);		//edit id
 				jt.setValueAt(pw, srow, 2);		//edit pw
 				jt.setValueAt(link, srow, 3);	//edit link
-
+				try {
+					fileSave();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			form.setVisible(false);
 			jp.setVisible(true);
@@ -210,6 +224,12 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 				if(name.equals(jt.getValueAt(i,0)) && id.equals(jt.getValueAt(i, 1)) && pw.equals(jt.getValueAt(i, 2)) && link.equals(jt.getValueAt(i,3))){
 					dtm.removeRow(i);
 				}
+			}
+			try {
+				fileSave();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
 		else if(ob==bt_up){		//edit button
@@ -370,6 +390,26 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	 public void mouseExited(MouseEvent e) {
 	  // TODO Auto-generated method stub
 	  
+	 }
+	 
+	 public void fileSave() throws IOException {
+	        FileOutputStream output = new FileOutputStream("out.txt");
+	        int row=jt.getRowCount();
+	        int col=jt.getColumnCount();
+	        
+	        for(int i=0; i<row; i++) {
+	        	for(int j=0;j<col;j++){
+	        		String data=(String) jt.getValueAt(i, j);
+	        		output.write(data.getBytes());
+	        		String d1=" ";
+	        		output.write(d1.getBytes());
+	        	}
+	        	String d2=(String)"\n";
+	        	output.write(d2.getBytes());
+	        }
+
+	        output.close();
+
 	 }
 
 }
