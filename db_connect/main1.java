@@ -54,6 +54,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	 public static Connection con;
 	 public static Statement st;
 	 public static ResultSet rs;
+	 
+	 public static String name_edit;
+	 public static String url_edit;
+	 public static String id_edit;
+	 public static String pw_edit;
+	 
+	 
 	 public static int id_num;
 
 	public Main1(int no_id) throws SQLException {
@@ -259,7 +266,9 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 					e1.printStackTrace();
 				}
 			}
-			else {	//edit form
+			else {	//edit form	
+				
+				System.out.println(id_edit);
 				jt.setValueAt(name, srow, 0);	//edit name
 				jt.setValueAt(id, srow, 1);		//edit id
 				jt.setValueAt(pw, srow, 2);		//edit pw
@@ -270,6 +279,16 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				String sql = "UPDATE `keys` SET `title` = "+query_name+", `url` = "+query_link+", `id_sequence` = "+query_id+", `pw_sequence` = "+query_pw+" WHERE `acnt_no` = "+id_num+" and `title` = '"+name_edit+"' and `pw_sequence` = '"+pw_edit+"' and `url` = '"+url_edit+"'"; 
+				try {
+					st.executeUpdate(sql);
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+				
 			}
 			form.setVisible(false);
 			jp.setVisible(true);
@@ -287,9 +306,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 				return;
 			}
 			String name = (String) jt.getValueAt(srow,0);
+			name_edit = name;
 			String id  = (String) jt.getValueAt(srow,1);
+			id_edit = id;
 			String pw  = (String) jt.getValueAt(srow,2);
+			pw_edit = pw;
 			String link  = (String) jt.getValueAt(srow,3);
+			url_edit = link;
 			for(int i=0; i<jt.getRowCount(); i++){
 				if(name.equals(jt.getValueAt(i,0)) && id.equals(jt.getValueAt(i, 1)) && pw.equals(jt.getValueAt(i, 2)) && link.equals(jt.getValueAt(i,3))){
 					dtm.removeRow(i);
@@ -311,9 +334,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			}
 		     
 			String name = (String) jt.getValueAt(srow,0);
+			name_edit = name;
 			String id  = (String) jt.getValueAt(srow,1);
+			id_edit = id;
 			String pw  = (String) jt.getValueAt(srow,2);
+			pw_edit = pw;
 			String link  = (String) jt.getValueAt(srow,3);
+			url_edit = link;
 			
 			form.tf_name.setText(name);
 			form.tf_id.setText(id);
