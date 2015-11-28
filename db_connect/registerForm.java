@@ -130,7 +130,13 @@ public class registerForm extends JFrame {
 				 */
 
 				// prepare sql statement
-				st = con.prepareStatement("INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
+				try {
+					st = con.prepareStatement(
+							"INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				try {
 					// bind params into sql statement
