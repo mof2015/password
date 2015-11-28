@@ -10,52 +10,47 @@ import javax.swing.event.ChangeListener;
 public class SearchForm extends JFrame {
 
 	JLabel la_box;
-	 JTextField tf;
-	 JButton bt_input, bt_cancel;
-	 JComboBox box = new JComboBox(new Object[] {"Name", "ID", "Password", "link"});
-	 JTextField textField;
-	 ChangeListener listener;
+	JTextField tf;
+	JButton bt_input, bt_cancel;
+	JComboBox box = new JComboBox(new Object[] {"Name", "ID", "Password", "link"});
+	JTextField textField;
+	ChangeListener listener;
 	 
-	 public SearchForm() {
+	public SearchForm() {
 
-		  setTitle("Insert");
+		setTitle("Insert");
 		  
-		  la_box = new JLabel ("Choose to Search");
+		la_box = new JLabel ("Choose to Search");
 		  
-		  tf = new JTextField();
+		tf = new JTextField();
 		  
-		  bt_input = new JButton("OK");
-		  bt_cancel = new JButton("Cancel");
+		bt_input = new JButton("OK");
+		bt_cancel = new JButton("Cancel");
 		 
-		  setLayout(null);
-
-		  la_box.setBounds(30, 30, 120, 30);
-		  box.setBounds(30, 80, 150, 30);
-		  tf.setBounds(30, 120 , 250, 30);
-		  bt_input.setBounds(30, 300, 60, 30);
-		  bt_cancel.setBounds(100, 300, 120, 30);
-		  
-		  add(la_box);
-		  add(box);
-		  add(tf);
-		  add(bt_input);  
-		  add(bt_cancel);
+		setLayout(null);
+		
+		//Component setting and addition
+		la_box.setBounds(30, 30, 120, 30);
+		box.setBounds(30, 80, 150, 30);
+		tf.setBounds(30, 120 , 250, 30);
+		bt_input.setBounds(30, 300, 60, 30);
+		bt_cancel.setBounds(100, 300, 120, 30);
+	  
+		add(la_box);
+		add(box);
+		add(tf);
+		add(bt_input);  
+		add(bt_cancel);
 		        
-		  setBounds(500, 500, 400, 400);
-	      setResizable(false);
-	        
+		setBounds(500, 500, 400, 400);
+		setResizable(false);    
 	 }
 	 
-	 public void initSearch(){//Search form
-		 setTitle("Search");
-		 /**
-		  tf_name.setText("");
-		  tf_id.setText("");
-		  tf_pw.setText("");
-		  tf_link.setText("");
-		  tf_name.requestFocus();
-		  */
-		 tf.setText("");
-		 tf.requestFocus();
-		 }
+	//Search form
+	public void initSearch(){
+		setTitle("Search");
+
+		tf.setText("");
+		tf.requestFocus();
+	}
 }
