@@ -1,4 +1,7 @@
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -61,6 +64,12 @@ public class registerForm extends JFrame{
 	  add(bt_input);  
 	  add(bt_cancel);
 	        
+	  bt_cancel.addActionListener(new ActionListener (){
+		  public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+		  }
+	  });
+	    
 	  setBounds(0, 0, 330, 300);
 	  setLocationRelativeTo(null);
 	
@@ -68,5 +77,7 @@ public class registerForm extends JFrame{
 	  setVisible(true);
 
 	 }
+	
+		
  } 
 
