@@ -46,11 +46,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	JPanel northp,southp;
 	JButton bt_add, bt_del, bt_up, bt_search;
 	
-	Object[][] rowData={
-			{"�꽕�씠踰�", "test","testtest", "http://www.naver.com/"},
-			{"釉붾옓蹂대뱶", "black","fortest", "http://kulms.korea.ac.kr/"},
-			{"�떎�쓬", "daumdaum","daumtest", "http://www.daum.net/"}
-	};
+	Object[][] rowData={};
 	
 	Object[] columnNames={"Name", "ID", "Password", "link"};
 
@@ -64,11 +60,49 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 				
 		id_num = no_id;
 		
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof", "root", "1234");
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			st = con.createStatement();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
+		dtm = new DefaultTableModel(rowData, columnNames);
+		
+		String sql = "select * from `keys` where `acnt_no` = "+no_id+"";
+		rs = st.executeQuery(sql);
+				
+		if (st.execute(sql)) {
+			rs = st.getResultSet();
+		}
+
+		while (rs.next()) {
+			String str = rs.getString("title");
+			String name = str;
+			
+			str = rs.getString("url");
+			String link = str;
+			
+			str = rs.getString("id_sequence");
+			String id = str;
+			
+			str = rs.getString("pw_sequence");
+			String pw = str;
+			
+			Object rowData[] = {name, id, pw, link};
+			dtm.addRow(rowData);
+		}		
+		
 		form=new InputForm();
 		form_search = new SearchForm();
 		box = form_search.box;
 		 
-		dtm = new DefaultTableModel(rowData, columnNames);
 		jt=new JTable (dtm);
 		scroll = new JScrollPane(jt);
 		label = new JLabel("IPMS");
@@ -215,7 +249,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-
 				
 				Object rowData[] = {name, id, pw, link};
 				dtm.addRow(rowData);
@@ -225,7 +258,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
 			}
 			else {	//edit form
 				jt.setValueAt(name, srow, 0);	//edit name
