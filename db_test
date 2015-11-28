@@ -1,0 +1,50 @@
+package db_connec_test;
+import java.sql.*;
+
+public class hello {
+	 private static Connection con;
+	 private static Statement st;
+	 private static ResultSet rs;
+
+	public static void main(String[] args) { 
+
+		try {
+
+			con = null;
+			rs = null;
+			st = null;
+
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof", "root", "1234");
+			st = con.createStatement();
+
+			String sql = null;
+			//String sql = "set names UTF8";
+			//st.executeQuery(sql);
+			
+			String url = "'www.naver.com'";
+
+			sql = "insert into website (url, min, max, special, comb, cont) values("+url+",6,9,1,1,1)";
+			st.executeUpdate(sql);
+			
+			
+			sql = "select * from website";
+
+			rs = st.executeQuery(sql);
+			
+			
+			if (st.execute(sql)) {
+				rs = st.getResultSet();
+			}
+
+
+			while (rs.next()) {
+				String str = rs.getString("url");
+				System.out.println(str);
+			}
+
+		} catch (SQLException sqex) {
+			System.out.println("SQLException: " + sqex.getMessage());
+			System.out.println("SQLState: " + sqex.getSQLState());
+		}
+	}
+}
