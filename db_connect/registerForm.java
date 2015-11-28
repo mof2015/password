@@ -25,15 +25,14 @@ public class registerForm extends JFrame{
 	 private JFrame controllingFrame;
 
 	 public static Connection con;
-	 public static Statement st;
+	 public static PreparedStatement st;
 	 public static ResultSet rs;
 	
 	 public registerForm() throws SQLException {
 			String[] favorites = { "Sports", "Programming", "Information security", "Music"};
 			JComboBox favoList = new JComboBox(favorites);
 			
-		con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof?useUnicode=true&characterEncoding=euckr", "root", "1234");
-		st = con.createStatement();
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof?useUnicode=true&characterEncoding=euckr", "root", "1234");
 		
 	  setTitle("Register");
 	  la_id = new JLabel("Id");
@@ -139,14 +138,24 @@ public class registerForm extends JFrame{
 							JOptionPane.ERROR_MESSAGE);
 					return;				  
 			  }
-				
-			  String sql = "INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES ('"+id_input+"','"+pw_input+"','"+name_input+"','"+mail_input+"')";
-				try {
-					st.executeUpdate(sql);
-				} catch (SQLException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
+			  
+			  // prepare sql statement
+			  st = con.prepareStatement("INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
+			  
+			  
+			  try {
+				  // bind params into sql statement
+				  st.setString(1, id_input);
+				  st.setString(2, pw_input);
+				  st.setString(3, name_input);
+				  st.setString(4, mail_input);
+				  
+				  // execute query
+				  st.executeUpdate();
+			  } catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			  }
 			  
 			  setVisible(false);
 		  }
