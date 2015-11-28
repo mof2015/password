@@ -1,4 +1,4 @@
-package db_connect;
+package db_connec_test;
 
 import java.sql.*;
 import java.awt.*;
