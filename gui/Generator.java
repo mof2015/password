@@ -1,4 +1,4 @@
-import java.util.Random;
+﻿import java.util.Random;
 
 
 public class Generator {
@@ -274,4 +274,3 @@ public class Generator {
 	}
 
 }
-

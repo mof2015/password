@@ -1,16 +1,23 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.LinearGradientPaint;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -19,15 +26,20 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
+
 public class InputForm extends JFrame{
 	JLabel la_name, la_id, la_pw, la_link, la_stren, la_len;
 	JTextField tf_name, tf_id, tf_pw, tf_link, tf_len;
 	JButton bt_input, bt_cancel;
-	JSlider slider;
+	JSlider slider, tmpslider;
 	ChangeListener listenForSlider;
 	DocumentListener listenForProgressBar;
 	JProgressBar strength;
- 
+	JRadioButton selector1, selector2;
+	JPanel radioPanel;
+	JTextField includeChar=new JTextField();
+	JTextField includeNum=new JTextField();
+	
 	public InputForm() {
 		la_name = new JLabel("Name");
 		la_id = new JLabel("id");
@@ -36,25 +48,29 @@ public class InputForm extends JFrame{
 		la_stren = new JLabel ("Strength");
 		la_len = new JLabel ("Length");
 		
+
 		tf_name = new JTextField();
 		tf_id = new JTextField();
 		tf_pw = new JTextField();
 		tf_link = new JTextField();
-
+		tf_len = new JTextField();
+		
 		bt_input = new JButton("OK");
 		bt_cancel = new JButton("Cancel");
-		listenForSlider = new ChangeListener(){
-			
-		//password strength state display
-		public void stateChanged(ChangeEvent e) {
-			Generator my=new Generator();				
-			slider = (JSlider) e.getSource();
-			tf_len.setText("" + slider.getValue());
-			my.length=slider.getValue();
-			tf_pw.setText(my.getPassword());
-			}
-		};
 		
+		selector1 = new JRadioButton("random");
+		selector1.setActionCommand("random");
+		selector2 = new JRadioButton("custom");
+		selector2.setActionCommand("custom");
+		ButtonGroup group = new ButtonGroup();
+		group.add(selector1);
+		group.add(selector2);
+		radioPanel = new JPanel(new GridLayout(1, 0));
+		radioPanel.add(selector1);
+		radioPanel.add(selector2);
+		radioPanel.setBounds(100,180,300,30);
+		add(radioPanel);
+        
 		//password strength measurement
 		listenForProgressBar=new DocumentListener(){
 			public void stren(){
@@ -75,48 +91,116 @@ public class InputForm extends JFrame{
 			}
 		};
 		
-        strength = new JProgressBar(0, 30);
-        strength.setBounds(230, 140, 150, 10);
-        strength.setUI(new ProgressBarUI());
-        tf_pw.getDocument().addDocumentListener(listenForProgressBar);
+		strength = new JProgressBar(0, 30);
+		strength.setBounds(230, 140, 150, 10);
+		strength.setUI(new ProgressBarUI());
+		tf_pw.getDocument().addDocumentListener(listenForProgressBar);
         
-		slider = new JSlider(8,20,10);
-		slider.setPaintTicks(true);
-		slider.setMajorTickSpacing(5);
-		slider.setMinorTickSpacing(1);     
-		slider.addChangeListener(listenForSlider);
-		slider.setBounds(75,170,230,50);
+		tmpslider = new JSlider(8,20,10);
+		tmpslider.setPaintTicks(true);
+		tmpslider.setMajorTickSpacing(5);
+		tmpslider.setMinorTickSpacing(1);     
+		tmpslider.addChangeListener(listenForSlider);
+		tmpslider.setBounds(75,210,230,50);
+		add(tmpslider);
+
+		includeChar.setBounds(70,260,150,30);
+		includeNum.setBounds(250,260,70,30);
+		includeChar.setText("");
+		includeNum.setText("");
+		add(includeChar);
+		add(includeNum);
+		includeChar.setVisible(false);
+		includeNum.setVisible(false);
+
 		
+		selector1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				includeChar.setVisible(false);
+				includeNum.setVisible(false);
+
+				listenForSlider = new ChangeListener(){
+					public void stateChanged(ChangeEvent e) {
+						Generator my=new Generator();				
+						slider = (JSlider) e.getSource();
+						tf_len.setText("" + slider.getValue());
+						my.self_password=0;
+						my.type=1;
+						my.length=slider.getValue();
+						tf_pw.setText(my.getPassword());
+					}
+				};
+
+				tmpslider.setVisible(false);
+				slider = new JSlider(8,20,10);
+				slider.setPaintTicks(true);
+				slider.setMajorTickSpacing(5);
+				slider.setMinorTickSpacing(1);     
+				slider.addChangeListener(listenForSlider);
+				slider.setBounds(75,210,230,50);
+				add(slider);
+			}
+		});
+		selector2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				includeChar.setVisible(true);
+				includeNum.setVisible(true);
+
+				listenForSlider = new ChangeListener(){
+					public void stateChanged(ChangeEvent e) {
+						
+						
+						Generator my=new Generator();
+						slider = (JSlider) e.getSource();
+						tf_len.setText("" + slider.getValue());
+						my.self_password=1;
+						my.setIncludeChar(includeChar.getText());
+						my.setIncludeNum(Integer.parseInt(includeNum.getText()));
+						my.type=1;
+						my.length=slider.getValue();
+						tf_pw.setText(my.getPassword());
+					}
+				};
+
+				tmpslider.setVisible(false);
+				slider = new JSlider(8,20,10);
+				slider.setPaintTicks(true);
+				slider.setMajorTickSpacing(5);
+				slider.setMinorTickSpacing(1);     
+				slider.addChangeListener(listenForSlider);
+				slider.setBounds(75,210,230,50);
+				add(slider);
+			}
+		});
+
 		setTitle("Add new");
 		setLayout(null);
 	 
-		//UI setting
 		la_name.setBounds(30, 30, 60, 30);
 		la_id.setBounds(30, 80, 30, 30);
 		la_pw.setBounds(30, 130, 30, 30);
-		la_link.setBounds(30,230,30,30);
-		la_len.setBounds(30,175,60,30);
-	  
+		la_link.setBounds(30,300,30,30);
+		la_len.setBounds(20,220,60,30);
+
+		//UI setting
 		tf_name.setBounds(90, 30, 120, 30);
 		tf_id.setBounds(90, 80, 120, 30);
 		tf_pw.setBounds(90, 130, 120, 30);
-		tf_link.setBounds(90, 230, 200, 30);
+		tf_link.setBounds(90, 300, 200, 30);
+		tf_len.setBounds(330,220,50,30);
 	  
-		bt_input.setBounds(30, 300, 60, 30);
-		bt_cancel.setBounds(100, 300, 120, 30);
-	  
-		tf_len = new JTextField();
-	  
-		tf_len.setBounds(310,170,50,30);
-	  
+		bt_input.setBounds(30, 400, 60, 30);
+		bt_cancel.setBounds(100, 400, 120, 30);
+		
+		
 		//Component addition
+		add(la_len);
 		add(tf_len);
 		add(la_name);
 		add(la_id);
 		add(la_pw);
 		add(la_link);
-		add(la_len);
-		add(slider);
+
 		add(strength);
 	  
 		add(tf_name);
@@ -126,7 +210,7 @@ public class InputForm extends JFrame{
 		add(bt_input);  
 		add(bt_cancel);
 	  
-		setBounds(500, 500, 400, 400);
+		setBounds(500, 500, 400, 600);
 		setResizable(false);
 	}
 	
