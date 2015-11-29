@@ -1,0 +1,44 @@
+package com.santosh.encryption;
+
+public class Main {
+
+	public static void main(String[] args) {
+		String plainData = "hello How are You \n I am Fine";//
+		/*1) 암호화하기 전 텍스트를 여기서 받습니다 */
+
+		Encrypter encrypterMain = Encrypter.getInstance();
+		/*2) Encrypter 클래스에서 하나 */
+		
+		String encryptedValue = encrypterMain.EncryptString(plainData);
+		/*3) 이제 막 encryption을 합니다*/
+		
+		System.out.println("__________________________________");
+		System.out.println(plainData);
+		System.out.println("_____");
+		System.out.println("Encrypted to");
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		
+		System.out.println(encryptedValue);
+		/*4) encryptedValue는 그렇게 해서 encrypt가 된 string, 이걸 DB에 저장*/
+
+		String temp = new String(encrypterMain.getSecretKey());
+		/*5) 근데 우리가 써야 하는 키값은 string이 아니라 SecretKey 타입, 그래서 변환이 필요
+		 * 이건 secretKey 타입인 key값을 string으로 변환하는 함수 이용해서 변환한 거 */
+		
+		System.out.println("secret key : "+temp);
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println("Again Decrypted to ");
+		
+		encrypterMain.setSecretKey(temp);
+		/*6) 자 이제 복호화
+		 * 이건 사용자가 이메일에서 받은 string을 가지고 
+		 * Encrypter 클래스에 있는 secretKey 값을 넣어주는 함수(setter)*/
+
+		String deCryptedValue = encrypterMain
+				.DeCryptEncryptedString(encryptedValue);
+		/*7) 이렇게 해서 deCryptedValue에는 복호화가 끝난, 원본 string이 나옵니다
+		 * 참 쉽죠?*/
+		
+		System.out.println(deCryptedValue);
+	}
+}
