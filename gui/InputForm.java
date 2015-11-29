@@ -91,7 +91,7 @@ public class InputForm extends JFrame{
 			}
 		};
 		
-		strength = new JProgressBar(0, 30);
+		strength = new JProgressBar(0, 100); //The strength status bar range
 		strength.setBounds(230, 140, 150, 10);
 		strength.setUI(new ProgressBarUI());
 		tf_pw.getDocument().addDocumentListener(listenForProgressBar);
