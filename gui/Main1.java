@@ -43,8 +43,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	JScrollPane scroll;
 	JLabel label, label_info;
 	JPanel northp,southp;
-	JButton bt_add, bt_del, bt_up, bt_search, bt_encrypt; //암호화 버튼 추가
-	
+	JButton bt_add, bt_del, bt_up, bt_search; 	
 	Object[][] rowData={
 			{"네이버", "test","testtest", "http://www.naver.com/"},
 			{"블랙보드", "black","fortest", "http://kulms.korea.ac.kr/"},
@@ -70,14 +69,12 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		bt_del = new JButton("Delete");  
 		bt_up = new JButton("Edit");  
 		bt_search = new JButton("Search");  
-		bt_encrypt = new JButton("Encrypt");
 
 		southp = new JPanel();
 		southp.add(bt_add);
 		southp.add(bt_del);
 		southp.add(bt_up);
 		southp.add(bt_search);
-		southp.add(bt_encrypt);
 		 
 		 
 		jp.add("Center",scroll);

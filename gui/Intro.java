@@ -90,7 +90,7 @@ public class Intro extends JFrame {
 				char[] input = passwordField.getPassword();
 				String id_input = idField.getText();
 	        		if (isPasswordCorrect(input) && isIDCorrect(id_input)) {
-					new Main1();
+					new decryptForm();
 	    				dispose();
 				} 
 	         		else {
