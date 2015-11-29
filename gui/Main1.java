@@ -23,7 +23,6 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
-
 public class Main1 extends Intro implements MouseListener, ActionListener {
 	JFrame jp = new JFrame("IPMS");
 	JTable jt;
@@ -42,7 +41,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	JScrollPane scroll;
 	JLabel label, label_info;
 	JPanel northp,southp;
-	JButton bt_add, bt_del, bt_up, bt_search;
+	JButton bt_add, bt_del, bt_up, bt_search, bt_encrypt; //암호화 버튼 추가
 	
 	Object[][] rowData={
 			{"네이버", "test","testtest", "http://www.naver.com/"},
@@ -68,12 +67,14 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		bt_del = new JButton("Delete");  
 		bt_up = new JButton("Edit");  
 		bt_search = new JButton("Search");  
+		bt_encrypt = new JButton("Encrypt");
 
 		southp = new JPanel();
 		southp.add(bt_add);
 		southp.add(bt_del);
 		southp.add(bt_up);
 		southp.add(bt_search);
+		southp.add(bt_encrypt);
 		 
 		 
 		jp.add("Center",scroll);
@@ -88,24 +89,15 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 
 		//create menu
 		mainMenu.add(new JMenuItem("Edit master password"));
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('E')); //Hot key Setting
 		mainMenu.add(new JMenuItem("Edit favorites"));
-		mainMenu.getItem(1).setAccelerator(KeyStroke.getKeyStroke('F')); //Hot key Setting
 		mainMenu.add(new JMenuItem("Backup"));
-		mainMenu.getItem(2).setAccelerator(KeyStroke.getKeyStroke('B', InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.add(new JMenuItem("Restore"));
-		mainMenu.getItem(3).setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.addSeparator(); //separator
 		
 		mainMenu.add(logOut);
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK ^ InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.addSeparator();
 		mainMenu.add(exit);
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('Q', InputEvent.ALT_MASK)); //Hot key Setting
-		//mainMenu.add(version);
-		//mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_MASK)); //Hot key Setting
 		helpMenu.add(info);
-		helpMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('I', InputEvent.CTRL_MASK)); //Hot key Setting
 
 		//add menu to menubar
 		menuBar.add(mainMenu);
@@ -113,7 +105,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 
 		//add menubar
 		jp.setJMenuBar(menuBar);
-		
 		
 	    jp.setLocationRelativeTo(null);
 	    jp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,6 +119,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    bt_del.addActionListener(this);
 	    bt_up.addActionListener(this);
 	    bt_search.addActionListener(this);
+	    //bt_encrypt.addActionListener(this);
 	    
 	    form.bt_input.addActionListener(this);
 	    form.bt_cancel.addActionListener(this);
@@ -147,14 +139,15 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			form.initTF();
 			form.setVisible(true);
 		}
-		else if(ob==form.bt_input){		//input button (insert / edit)
+		//input button (insert / edit)
+		else if(ob==form.bt_input){		
 			String name= form.tf_name.getText();
 			String id= form.tf_id.getText();
 			String pw= form.tf_pw.getText();
 			String link= form.tf_link.getText();
 		      
+			//check null - if there is no input in any of the fields, do not accept	
 			if(name == null  || name.length() == 0){
-		      //check nullable	
 				JOptionPane.showMessageDialog(form, "Input name!!"); 
 				form.tf_name.requestFocus();
 				return;
