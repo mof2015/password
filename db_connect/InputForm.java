@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
-import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -44,8 +43,6 @@ public class InputForm extends JFrame{
 	JTextField includeNum=new JTextField();
 	
 	public InputForm() {
-		
-		
 		la_name = new JLabel("Name");
 		la_id = new JLabel("id");
 		la_pw = new JLabel("pw");
@@ -80,12 +77,7 @@ public class InputForm extends JFrame{
 		listenForProgressBar=new DocumentListener(){
 			public void stren(){
 				Checker check = new Checker();
-				try {
-					strength.setValue(check.checker(tf_pw.getText()));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				strength.setValue(check.checker(tf_pw.getText()));
 			}
 
 			public void changedUpdate(DocumentEvent e) {
@@ -101,7 +93,7 @@ public class InputForm extends JFrame{
 			}
 		};
 		
-		strength = new JProgressBar(0, 30);
+		strength = new JProgressBar(0, 100); //The strength status bar range
 		strength.setBounds(230, 140, 150, 10);
 		strength.setUI(new ProgressBarUI());
 		tf_pw.getDocument().addDocumentListener(listenForProgressBar);
