@@ -6,6 +6,8 @@ import java.awt.Insets;
 import java.awt.LinearGradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -15,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
@@ -28,17 +31,23 @@ import javax.swing.plaf.basic.BasicProgressBarUI;
 
 
 public class InputForm extends JFrame{
+	private JFrame controllingFrame;
 	JLabel la_name, la_id, la_pw, la_link, la_stren, la_len;
 	JTextField tf_name, tf_id, tf_pw, tf_link, tf_len;
 	JButton bt_input, bt_cancel;
-	JSlider slider, tmpslider;
-	ChangeListener listenForSlider;
+	JSlider slider1 = new JSlider(8,20,10);
+	JSlider slider2 = new JSlider(8,20,10);
+	JSlider tmpslider;
 	DocumentListener listenForProgressBar;
+	ChangeListener listenForSlider;
 	JProgressBar strength;
 	JRadioButton selector1, selector2;
 	JPanel radioPanel;
 	JTextField includeChar=new JTextField();
 	JTextField includeNum=new JTextField();
+	JLabel customChar=new JLabel("custom letter");
+	JLabel customNum=new JLabel("custom number");
+	Generator my=new Generator();
 	
 	public InputForm() {
 		la_name = new JLabel("Name");
@@ -95,81 +104,106 @@ public class InputForm extends JFrame{
 		strength.setBounds(230, 140, 150, 10);
 		strength.setUI(new ProgressBarUI());
 		tf_pw.getDocument().addDocumentListener(listenForProgressBar);
-        
 		tmpslider = new JSlider(8,20,10);
 		tmpslider.setPaintTicks(true);
 		tmpslider.setMajorTickSpacing(5);
 		tmpslider.setMinorTickSpacing(1);     
-		tmpslider.addChangeListener(listenForSlider);
 		tmpslider.setBounds(75,210,230,50);
 		add(tmpslider);
 
-		includeChar.setBounds(70,260,150,30);
-		includeNum.setBounds(250,260,70,30);
+		customChar.setBounds(20,260,90,30);
+		customNum.setBounds(20, 300, 90, 30);
+		includeChar.setBounds(120,260,150,30);
+		includeNum.setBounds(120,300,150,30);
 		includeChar.setText("");
 		includeNum.setText("");
+		add(customChar);
+		add(customNum);
 		add(includeChar);
 		add(includeNum);
+		customChar.setVisible(false);
+		customNum.setVisible(false);
 		includeChar.setVisible(false);
 		includeNum.setVisible(false);
 
-		
-		selector1.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				includeChar.setVisible(false);
-				includeNum.setVisible(false);
+		selector1.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==ItemEvent.SELECTED){
+					includeChar.setVisible(false);
+					includeNum.setVisible(false);
+					customNum.setVisible(false);
+					customChar.setVisible(false);
+					my.self_password=0;
 
-				listenForSlider = new ChangeListener(){
-					public void stateChanged(ChangeEvent e) {
-						Generator my=new Generator();				
-						slider = (JSlider) e.getSource();
-						tf_len.setText("" + slider.getValue());
-						my.self_password=0;
-						my.type=1;
-						my.length=slider.getValue();
-						tf_pw.setText(my.getPassword());
-					}
-				};
+					listenForSlider = new ChangeListener(){
+						public void stateChanged(ChangeEvent e) {
+							slider1 = (JSlider) e.getSource();
+							tf_len.setText("" + slider1.getValue());
+							my.type=1;
+							my.length=slider1.getValue();
+							tf_pw.setText(my.getPassword());
+						}
+					};
 
-				tmpslider.setVisible(false);
-				slider = new JSlider(8,20,10);
-				slider.setPaintTicks(true);
-				slider.setMajorTickSpacing(5);
-				slider.setMinorTickSpacing(1);     
-				slider.addChangeListener(listenForSlider);
-				slider.setBounds(75,210,230,50);
-				add(slider);
+					tmpslider.setVisible(false);
+					slider2.setVisible(false);
+					slider1.setVisible(true);
+					slider1.setPaintTicks(true);
+					slider1.setMajorTickSpacing(5);
+					slider1.setMinorTickSpacing(1);     
+					slider1.addChangeListener(listenForSlider);
+					slider1.setBounds(75,210,230,50);
+					add(slider1);
+				}
 			}
 		});
-		selector2.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				includeChar.setVisible(true);
-				includeNum.setVisible(true);
+		selector2.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==ItemEvent.SELECTED){
+					includeChar.setVisible(true);
+					includeNum.setVisible(true);
+					customNum.setVisible(true);
+					customChar.setVisible(true);
+					my.self_password=1;
 
-				listenForSlider = new ChangeListener(){
-					public void stateChanged(ChangeEvent e) {
-						
-						
-						Generator my=new Generator();
-						slider = (JSlider) e.getSource();
-						tf_len.setText("" + slider.getValue());
-						my.self_password=1;
-						my.setIncludeChar(includeChar.getText());
-						my.setIncludeNum(Integer.parseInt(includeNum.getText()));
-						my.type=1;
-						my.length=slider.getValue();
-						tf_pw.setText(my.getPassword());
-					}
-				};
 
-				tmpslider.setVisible(false);
-				slider = new JSlider(8,20,10);
-				slider.setPaintTicks(true);
-				slider.setMajorTickSpacing(5);
-				slider.setMinorTickSpacing(1);     
-				slider.addChangeListener(listenForSlider);
-				slider.setBounds(75,210,230,50);
-				add(slider);
+					listenForSlider = new ChangeListener(){
+						public void stateChanged(ChangeEvent e) {
+							int tmp;
+							try{
+								tmp=Integer.parseInt(includeNum.getText());
+							} catch(Exception e1){
+			    				JOptionPane.showMessageDialog(controllingFrame,
+			    	    				"At least custom number should be input!!",
+			    	    				"Error Message",
+			    	    				JOptionPane.ERROR_MESSAGE);
+			    				includeNum.requestFocus();
+			    				return;
+
+							} finally{
+								
+							}
+							
+							slider2 = (JSlider) e.getSource();
+							tf_len.setText("" + slider2.getValue());
+							my.setIncludeChar(includeChar.getText());
+							my.setIncludeNum(tmp);
+							my.type=1;
+							my.length=slider2.getValue();
+							tf_pw.setText(my.getPassword());
+						}
+					};
+
+					tmpslider.setVisible(false);
+					slider1.setVisible(false);
+					slider2.setVisible(true);
+					slider2.setPaintTicks(true);
+					slider2.setMajorTickSpacing(5);
+					slider2.setMinorTickSpacing(1);     
+					slider2.addChangeListener(listenForSlider);
+					slider2.setBounds(75,210,230,50);
+					add(slider2);
+				}
 			}
 		});
 
@@ -179,14 +213,14 @@ public class InputForm extends JFrame{
 		la_name.setBounds(30, 30, 60, 30);
 		la_id.setBounds(30, 80, 30, 30);
 		la_pw.setBounds(30, 130, 30, 30);
-		la_link.setBounds(30,300,30,30);
+		la_link.setBounds(30,360,30,30);
 		la_len.setBounds(20,220,60,30);
 
 		//UI setting
 		tf_name.setBounds(90, 30, 120, 30);
 		tf_id.setBounds(90, 80, 120, 30);
 		tf_pw.setBounds(90, 130, 120, 30);
-		tf_link.setBounds(90, 300, 200, 30);
+		tf_link.setBounds(90, 360, 200, 30);
 		tf_len.setBounds(330,220,50,30);
 	  
 		bt_input.setBounds(30, 400, 60, 30);
@@ -210,7 +244,9 @@ public class InputForm extends JFrame{
 		add(bt_input);  
 		add(bt_cancel);
 	  
-		setBounds(500, 500, 400, 600);
+		setBounds(500, 500, 400, 480);
+		setLocationRelativeTo(null);
+
 		setResizable(false);
 	}
 	
