@@ -1,4 +1,4 @@
-import java.awt.Component;
+﻿import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -172,6 +172,12 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			if(link.length()==0){
 				JOptionPane.showMessageDialog(form, "Input link!!");
 				form.tf_link.requestFocus();
+				return;
+			}
+			
+			if(form.strength.getValue()<20){
+				JOptionPane.showMessageDialog(form, "Password is too weak!!");
+				form.tf_pw.requestFocus();
 				return;
 			}
 			
