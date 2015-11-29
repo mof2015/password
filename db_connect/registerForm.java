@@ -15,7 +15,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class registerForm extends JFrame {
-	JLabel la_id, la_mail, la_pw, la_confirm, la_favo, la_name;
+	JLabel la_id, la_mail, la_pw, la_confirm, la_name;
 	JTextField tf_id, tf_name;
 	JTextField tf_mail;
 	JPasswordField tf_pw, tf_confirm;
@@ -27,8 +27,6 @@ public class registerForm extends JFrame {
 	public static ResultSet rs;
 
 	public registerForm() throws SQLException {
-		String[] favorites = { "Sports", "Programming", "Information security", "Music" };
-		JComboBox favoList = new JComboBox(favorites);
 
 		con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof?useUnicode=true&characterEncoding=euckr", "root",
 				"1234");
@@ -39,7 +37,6 @@ public class registerForm extends JFrame {
 		la_pw = new JLabel("Master password");
 		la_name = new JLabel("Name");
 		la_confirm = new JLabel("Confirm");
-		la_favo = new JLabel("Favorite");
 
 		tf_id = new JTextField();
 		tf_mail = new JTextField();
@@ -57,7 +54,6 @@ public class registerForm extends JFrame {
 		la_pw.setBounds(30, 100, 120, 30);
 		la_confirm.setBounds(30, 140, 120, 30);
 		la_name.setBounds(30, 180, 120, 30);
-		la_favo.setBounds(30, 220, 120, 30);
 
 		tf_id.setBounds(160, 20, 120, 30);
 		tf_mail.setBounds(160, 60, 120, 30);
@@ -67,21 +63,18 @@ public class registerForm extends JFrame {
 
 		bt_input.setBounds(80, 260, 60, 30);
 		bt_cancel.setBounds(150, 260, 100, 30);
-		favoList.setBounds(160, 220, 120, 30);
 
 		add(la_name);
 		add(la_id);
 		add(la_mail);
 		add(la_pw);
 		add(la_confirm);
-		add(la_favo);
 
 		add(tf_name);
 		add(tf_id);
 		add(tf_mail);
 		add(tf_pw);
 		add(tf_confirm);
-		add(favoList);
 
 		add(bt_input);
 		add(bt_cancel);
@@ -131,8 +124,7 @@ public class registerForm extends JFrame {
 
 				// prepare sql statement
 				try {
-					st = con.prepareStatement(
-							"INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
+					st = con.prepareStatement("INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
