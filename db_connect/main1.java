@@ -1,5 +1,7 @@
 package db_connec_test;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.awt.Component;
@@ -14,6 +16,7 @@ import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,12 +32,15 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
-
 //library for email
 import java.util.Properties;
+import java.util.Random;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -68,15 +74,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	JPanel northp,southp;
 	JButton bt_add, bt_del, bt_up, bt_search;
 
-	
-	static Encryptor encryptor = new Encryptor();
-	String encodedEncryptedValue = "";
-	Cipher aesCipher = null;
-	SecretKey secretKey = null;
-	KeyGenerator keyGen = null;
-	byte[] byteCipherText = null;
-	
-	
 	Object[][] rowData={};
 	
 	Object[] columnNames={"Name", "ID", "Password", "link"};
@@ -94,6 +91,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	 public static String pw_edit;	 
 	 
 	 public static int id_num;
+	 
+	 public static String key;
 
 	public Main1(int no_id, String get_key) throws SQLException {
 				
@@ -123,8 +122,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			rs = st.getResultSet();
 		}
 
-		while (rs.next()) {
-//			Encryptor encrypterMain1 = Encryptor.getInstance();		
+		while (rs.next()) {	
 			String str = rs.getString("title");
 			String name = str;
 			
@@ -137,23 +135,47 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			str = rs.getString("pw_sequence");
 			String pw = str;
 			
-		/*	SecretKey key = encrypterMain1.getKey(get_key);
-			String enc = "5wxx91QBJaZROtUKDI5nog==";
-			
-			String deCryptedValue = encrypterMain1.DeCryptEncryptedString(enc, key);
-			
-			String deCryptedValue = encrypterMain1.DeCryptEncryptedString(str);
-			
-								String update_query1 = "UPDATE `keys` SET `pw_sequence` = '"+deCryptedValue+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+str+"'";
-
-			st2.executeUpdate(update_query1);	
-			System.out.println(get_key);
-			System.out.println(deCryptedValue);
-			System.out.println(str);*/
-			
-			Object rowData[] = {name, id, pw, link};
+			Encryptor aes256 = null;
+			try {
+				aes256 = new Encryptor(get_key);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+	        String decText = null;
+			try {
+				decText = aes256.aesDecode(pw);
+			} catch (InvalidKeyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidAlgorithmParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+//	        String sql2 = "UPDATE `keys` SET `pw_sequence` = '"+decText+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+pw+"'"; 
+	
+	//        st2.executeUpdate(sql2);
+	        
+			Object rowData[] = {name, id, decText, link};
 			dtm.addRow(rowData);
-		}		
+		}		    	
 		
 		form=new InputForm();
 		form_search = new SearchForm();
@@ -206,7 +228,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 		jp.setJMenuBar(menuBar);
 		
 	    jp.setLocationRelativeTo(null);
-	    jp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    jp.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
 
@@ -296,6 +318,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			String query_id = "'"+id+"'";
 			String query_pw = "'"+pw+"'";
 			String query_link = "'"+link+"'";
+			
+			if(form.strength.getValue() < 20)
+			{
+				JOptionPane.showMessageDialog(form, "Password is too weak!");
+				form.tf_pw.requestFocus();
+				return;
+			}
 					
 			if(form.getTitle().equals("Add new")){		//add new form
 	
@@ -618,10 +647,25 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 		else if(ob==logOut){			
 			String pw_query = "select * from `keys` where `acnt_no` = "+id_num+"";
 
-			Encryptor encrypterMain = Encryptor.getInstance();
 			
-			SecretKey key = encrypterMain.getKey();				
-			String temp = new String(encrypterMain.getSecretKeys(key));
+			StringBuffer keyBuff = new StringBuffer();
+	    	key = new String();
+	    	String keySource = 
+	    			new String("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*?/");
+	    	while(keyBuff.length()<16){
+	    		Random r = new Random();
+	    		int index=r.nextInt(keySource.length());
+	    		keyBuff.append(keySource.charAt(index));
+	    	}
+	    	key=keyBuff.toString();	    	
+			
+			Encryptor aes256 = null;
+			try {
+				aes256 = new Encryptor(key);
+			} catch (UnsupportedEncodingException e4) {
+				// TODO Auto-generated catch block
+				e4.printStackTrace();
+			}
 			
 			try {
 				rs = st.executeQuery(pw_query);
@@ -642,17 +686,40 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			try {
 				while (rs.next()) {
 					String user_pw = rs.getString("pw_sequence");							
-					String encryptedValue = encrypterMain.EncryptString(user_pw, key);		
-					String update_query = "UPDATE `keys` SET `pw_sequence` = '"+encryptedValue+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+user_pw+"'";
+		            String text =new String(user_pw);
+		            String encText = null;
+					try {
+						encText = aes256.aesEncode(text);
+					} catch (InvalidKeyException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NoSuchAlgorithmException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NoSuchPaddingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (InvalidAlgorithmParameterException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IllegalBlockSizeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (BadPaddingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					String update_query = "UPDATE `keys` SET `pw_sequence` = '"+encText+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+user_pw+"'";
 					
-					st2.executeUpdate(update_query);				
-					System.out.println(encryptedValue);
+					st2.executeUpdate(update_query);		
 				}
 			} catch (SQLException e3) {
 				// TODO Auto-generated catch block
 				e3.printStackTrace();
-			}	
-			
+			}			
 			
 			String sql2 = "select * from `account` where `no` = "+id_num+"";		
 			
@@ -666,7 +733,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			try {
 				if (st.execute(sql2)) {
 					rs = st.getResultSet();
-				}
+				}	
 			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -695,7 +762,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	        String subject = "Thanks for using our IPMS.";
 	        String body = "Dear "+user_name+"\n"
 	        			+"Thanks for using our IPMS service.\n"+
-	        		"Your decryption key is "+temp+"\n"
+	        		"Your decryption key is "+key+"\n"
 	        		+"Many thanks for your time";
 	         
 	        //properties 설정
@@ -772,12 +839,27 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 		}
 		else if(ob==exit){		
 			String pw_query = "select * from `keys` where `acnt_no` = "+id_num+"";
+			
+			StringBuffer keyBuff = new StringBuffer();
+        	String key = new String();
+        	String keySource = 
+        			new String("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*?/");
+        	while(keyBuff.length()<16){
+        		Random r = new Random();
+        		int index=r.nextInt(keySource.length());
+        		keyBuff.append(keySource.charAt(index));
+        	}
+        	key=keyBuff.toString();
+        	
+            Encryptor aes256 = null;
+			try {
+				aes256 = new Encryptor(key);
+			} catch (UnsupportedEncodingException e4) {
+				// TODO Auto-generated catch block
+				e4.printStackTrace();
+			}
+            
 
-			Encryptor encrypterMain = Encryptor.getInstance();
-			
-			SecretKey key = encrypterMain.getKey();				
-			String temp = new String(encrypterMain.getSecretKeys(key));
-			
 			try {
 				rs = st.executeQuery(pw_query);
 			} catch (SQLException e3) {
@@ -796,18 +878,41 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 
 			try {
 				while (rs.next()) {
-					String user_pw = rs.getString("pw_sequence");							
-					String encryptedValue = encrypterMain.EncryptString(user_pw, key);		
-					String update_query = "UPDATE `keys` SET `pw_sequence` = '"+encryptedValue+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+user_pw+"'";
+					String user_pw = rs.getString("pw_sequence");						
+		            String text =new String(user_pw);
+		            String encText = null;
+					try {
+						encText = aes256.aesEncode(text);
+					} catch (InvalidKeyException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NoSuchAlgorithmException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NoSuchPaddingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (InvalidAlgorithmParameterException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IllegalBlockSizeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (BadPaddingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					String update_query = "UPDATE `keys` SET `pw_sequence` = '"+encText+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+user_pw+"'";
 					
-					st2.executeUpdate(update_query);				
-					System.out.println(encryptedValue);
+					st2.executeUpdate(update_query);	
 				}
 			} catch (SQLException e3) {
 				// TODO Auto-generated catch block
 				e3.printStackTrace();
 			}	
-			
 			String sql2 = "select * from `account` where `no` = "+id_num+"";		
 			
 			try {
@@ -849,7 +954,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	        String subject = "Thanks for using our IPMS.";
 	        String body = "Dear "+user_name+"\n"
 	        			+"Thanks for using our IPMS service.\n"+
-	        		"Your decryption key is "+temp+"\n"
+	        		"Your decryption key is "+key+"\n"
 	        		+"Many thanks for your time";
 	         
 	        //properties 설정
