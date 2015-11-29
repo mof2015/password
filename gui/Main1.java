@@ -1,10 +1,12 @@
-﻿import java.awt.Component;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,7 +25,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
-public class Main1 extends Intro implements MouseListener, ActionListener {
+public class Main1 extends Intro implements MouseListener, ActionListener, WindowListener {
 	JFrame jp = new JFrame("IPMS");
 	JTable jt;
 	JComboBox box;
@@ -31,11 +33,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	InputForm form;
 	SearchForm form_search;
 	EditMasterForm form_master;
+	EditEmailForm form_email;
 	int srow;
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
 	JMenu helpMenu = new JMenu("Help");
 	JMenuItem editMaster = new JMenuItem("Edit master password");
+	JMenuItem editEmail = new JMenuItem("Edit master email");
 	JMenuItem logOut = new JMenuItem("Log Out");
 	JMenuItem exit = new JMenuItem("Exit");
 	JMenuItem version = new JMenuItem("Version");
@@ -43,7 +47,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	JScrollPane scroll;
 	JLabel label, label_info;
 	JPanel northp,southp;
-	JButton bt_add, bt_del, bt_up, bt_search; 	
+	JButton bt_add, bt_del, bt_up, bt_search, bt_encrypt; //암호화 버튼 추가
+	
 	Object[][] rowData={
 			{"네이버", "test","testtest", "http://www.naver.com/"},
 			{"블랙보드", "black","fortest", "http://kulms.korea.ac.kr/"},
@@ -55,6 +60,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	public Main1() {
 		form=new InputForm();
 		form_search = new SearchForm();
+		form_email = new EditEmailForm();
 		form_master = new EditMasterForm();
 		box = form_search.box;
 		 
@@ -69,12 +75,14 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		bt_del = new JButton("Delete");  
 		bt_up = new JButton("Edit");  
 		bt_search = new JButton("Search");  
+		bt_encrypt = new JButton("Encrypt");
 
 		southp = new JPanel();
 		southp.add(bt_add);
 		southp.add(bt_del);
 		southp.add(bt_up);
 		southp.add(bt_search);
+		southp.add(bt_encrypt);
 		 
 		 
 		jp.add("Center",scroll);
@@ -88,6 +96,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		eventUp();
 
 		//create menu
+		mainMenu.add(editEmail);
 		mainMenu.add(editMaster);
 		mainMenu.addSeparator(); //separator
 		
@@ -124,9 +133,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    form_search.bt_input.addActionListener(this);
 	    form_search.bt_cancel.addActionListener(this);
 	    
+	    form_email.bt_input.addActionListener(this);
+	    form_email.bt_cancel.addActionListener(this);
+	    
 	    form_master.bt_input.addActionListener(this);
 	    form_master.bt_cancel.addActionListener(this);
 	    
+	    editEmail.addActionListener(this);
 	    editMaster.addActionListener(this);
 	    logOut.addActionListener(this);
 	    exit.addActionListener(this);
@@ -169,12 +182,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			if(link.length()==0){
 				JOptionPane.showMessageDialog(form, "Input link!!");
 				form.tf_link.requestFocus();
-				return;
-			}
-			
-			if(form.strength.getValue()<20){
-				JOptionPane.showMessageDialog(form, "Password is too weak!!");
-				form.tf_pw.requestFocus();
 				return;
 			}
 			
@@ -338,7 +345,26 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			form_search.setVisible(false);
 			jp.setVisible(true);
 		}
-
+		//DB연동이 아직 안됐으므로 로그아웃 후 재로그인시 수정 데이터는 모두 저장되지 않음
+		else if(ob==editEmail) {
+			form_email.initEditEmail();
+			form_email.setVisible(true);
+		}
+		else if(ob==form_email.bt_input){
+			String email = form_email.tf_email.getText();
+			
+			if(email == null || email.length() == 0){
+				JOptionPane.showMessageDialog(form_email, "Input New Email!!"); 
+				form_email.tf_email.requestFocus();
+				return;
+			}
+			form_email.setVisible(false);
+			jp.setVisible(true);
+		}
+		else if(ob==form_email.bt_cancel){
+			form_email.setVisible(false);
+			jp.setVisible(true);
+		}
 		else if(ob==editMaster) {
 			form_master.initEditMaster();
 			form_master.setVisible(true);
@@ -445,4 +471,47 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 
 	 }
 
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 }
