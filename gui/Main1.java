@@ -30,10 +30,12 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	DefaultTableModel dtm;
 	InputForm form;
 	SearchForm form_search;
+	EditMasterForm form_master;
 	int srow;
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
 	JMenu helpMenu = new JMenu("Help");
+	JMenuItem editMaster = new JMenuItem("Edit master password");
 	JMenuItem logOut = new JMenuItem("Log Out");
 	JMenuItem exit = new JMenuItem("Exit");
 	JMenuItem version = new JMenuItem("Version");
@@ -54,6 +56,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	public Main1() {
 		form=new InputForm();
 		form_search = new SearchForm();
+		form_master = new EditMasterForm();
 		box = form_search.box;
 		 
 		dtm = new DefaultTableModel(rowData, columnNames);
@@ -88,10 +91,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		eventUp();
 
 		//create menu
-		mainMenu.add(new JMenuItem("Edit master password"));
-		mainMenu.add(new JMenuItem("Edit favorites"));
-		mainMenu.add(new JMenuItem("Backup"));
-		mainMenu.add(new JMenuItem("Restore"));
+		mainMenu.add(editMaster);
 		mainMenu.addSeparator(); //separator
 		
 		mainMenu.add(logOut);
@@ -127,6 +127,10 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    form_search.bt_input.addActionListener(this);
 	    form_search.bt_cancel.addActionListener(this);
 	    
+	    form_master.bt_input.addActionListener(this);
+	    form_master.bt_cancel.addActionListener(this);
+	    
+	    editMaster.addActionListener(this);
 	    logOut.addActionListener(this);
 	    exit.addActionListener(this);
 	    info.addActionListener(this);
@@ -332,6 +336,41 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			jp.setVisible(true);
 		}
 		//DB연동이 아직 안됐으므로 로그아웃 후 재로그인시 수정 데이터는 모두 저장되지 않음
+		else if(ob==editMaster) {
+			form_master.initEditMaster();
+			form_master.setVisible(true);
+		}
+		else if(ob==form_master.bt_input){
+			String pw= form_master.tf_pw.getText();
+			String confirm= form_master.tf_confirm.getText();
+
+			//check null - if there is no input in any of the fields, do not accept	
+			if(pw == null  || pw.length() == 0){
+				JOptionPane.showMessageDialog(form_master, "Input New Password!!"); 
+				form_master.tf_pw.requestFocus();
+				return;
+			}
+		      
+			if(confirm.length()==0){
+				JOptionPane.showMessageDialog(form_master, "Confirm New Password!!"); 
+				form_master.tf_confirm.requestFocus();
+				return;
+			}
+			
+			if(confirm.equals(pw) == false)
+			{
+				JOptionPane.showMessageDialog(form_master, "Password not Confirmed properly! Try Again!!"); 
+				form_master.tf_confirm.requestFocus();
+				return;
+			}
+			
+			form_master.setVisible(false);
+			jp.setVisible(true);
+		}
+		else if(ob==form_master.bt_cancel){
+			form_master.setVisible(false);
+			jp.setVisible(true);
+		}
 		else if(ob==logOut){
 			jp.setVisible(false);
 			Intro gui =new Intro();
@@ -347,10 +386,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		else if(ob==exit){
 			jp.setVisible(false);
 		}
-		else if(ob==info){
-			
+		else if(ob==info){	
 			JOptionPane.showMessageDialog(helpMenu, "Copyright (C) Korea University Information Security MOF Team", "Info", JOptionPane.INFORMATION_MESSAGE);
-
 		}
 	}
 
