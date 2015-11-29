@@ -14,20 +14,17 @@ import javax.swing.event.ChangeListener;
 
 public class registerForm extends JFrame{
  
-	 JLabel la_id, la_pw, la_confirm, la_favo;
+	 JLabel la_id, la_pw, la_confirm;
 	 JTextField tf_id;
 	 JTextField tf_pw, tf_confirm;
 	 JButton bt_input, bt_cancel;
 	
 	 public registerForm() {
-			String[] favorites = { "Sports", "Programming", "Information security", "Music"};
-			JComboBox favoList = new JComboBox(favorites);
 		
 	  setTitle("Register");
 	  la_id = new JLabel("ID");
 	  la_pw = new JLabel("Master password");
 	  la_confirm = new JLabel ("Confirm");
-	  la_favo = new JLabel ("Favorite");
 	  
 	  tf_id = new JTextField();
 	  tf_pw = new JTextField();
@@ -38,10 +35,10 @@ public class registerForm extends JFrame{
 	 
 	  setLayout(null);
 	  
+	  //Component setting
 	  la_id.setBounds(30, 30, 120, 30);
 	  la_pw.setBounds(30, 70, 120, 30);
 	  la_confirm.setBounds(30,110,120,30);
-	  la_favo.setBounds(30,150,120,30);
 	  
 	  tf_id.setBounds(160, 30, 120, 30);
 	  tf_pw.setBounds(160, 70, 120, 30);
@@ -49,17 +46,15 @@ public class registerForm extends JFrame{
 	  
 	  bt_input.setBounds(80, 200, 60, 30);
 	  bt_cancel.setBounds(150, 200, 100, 30);
-	  favoList.setBounds(160,150,120,30);
 	  
+	  //Component addition
 	  add(la_id);
 	  add(la_pw);
 	  add(la_confirm);
-	  add(la_favo);
 	
 	  add(tf_id);
 	  add(tf_pw);
 	  add(tf_confirm);
-	  add(favoList);
 	
 	  add(bt_input);  
 	  add(bt_cancel);
