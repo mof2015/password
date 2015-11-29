@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,14 +30,6 @@ import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
 
-
-
-
-
-
-
-
-
 //library for email
 import java.util.Properties;
 
@@ -50,7 +44,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class Main1 extends Intro implements MouseListener, ActionListener {
+public class Main1 extends Intro implements MouseListener, ActionListener, WindowListener {
 	JFrame jp = new JFrame("IPMS");
 	JTable jt;
 	JComboBox box;
@@ -58,11 +52,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	InputForm form;
 	SearchForm form_search;
 	EditMasterForm form_master;
+	EditEmailForm form_email;
 	int srow;
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
 	JMenu helpMenu = new JMenu("Help");
 	JMenuItem editMaster = new JMenuItem("Edit master password");
+	JMenuItem editEmail = new JMenuItem("Edit master email");
 	JMenuItem logOut = new JMenuItem("Log Out");
 	JMenuItem exit = new JMenuItem("Exit");
 	JMenuItem version = new JMenuItem("Version");
@@ -95,12 +91,11 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	 public static String name_edit;
 	 public static String url_edit;
 	 public static String id_edit;
-	 public static String pw_edit;
-	 
+	 public static String pw_edit;	 
 	 
 	 public static int id_num;
 
-	public Main1(int no_id) throws SQLException {
+	public Main1(int no_id, String get_key) throws SQLException {
 				
 		id_num = no_id;
 		
@@ -129,6 +124,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		}
 
 		while (rs.next()) {
+//			Encryptor encrypterMain1 = Encryptor.getInstance();		
 			String str = rs.getString("title");
 			String name = str;
 			
@@ -141,12 +137,28 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			str = rs.getString("pw_sequence");
 			String pw = str;
 			
+		/*	SecretKey key = encrypterMain1.getKey(get_key);
+			String enc = "5wxx91QBJaZROtUKDI5nog==";
+			
+			String deCryptedValue = encrypterMain1.DeCryptEncryptedString(enc, key);
+			
+			String deCryptedValue = encrypterMain1.DeCryptEncryptedString(str);
+			
+								String update_query1 = "UPDATE `keys` SET `pw_sequence` = '"+deCryptedValue+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+str+"'";
+
+			st2.executeUpdate(update_query1);	
+			System.out.println(get_key);
+			System.out.println(deCryptedValue);
+			System.out.println(str);*/
+			
 			Object rowData[] = {name, id, pw, link};
 			dtm.addRow(rowData);
 		}		
 		
 		form=new InputForm();
 		form_search = new SearchForm();
+		form_email = new EditEmailForm();
+		form_master = new EditMasterForm();
 		box = form_search.box;
 		 
 		jt=new JTable (dtm);
@@ -177,25 +189,14 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		eventUp();
 
 		//create menu
-		mainMenu.add(new JMenuItem("Edit master password"));
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('E')); //Hot key Setting
-		mainMenu.add(new JMenuItem("Edit favorites"));
-		mainMenu.getItem(1).setAccelerator(KeyStroke.getKeyStroke('F')); //Hot key Setting
-		mainMenu.add(new JMenuItem("Backup"));
-		mainMenu.getItem(2).setAccelerator(KeyStroke.getKeyStroke('B', InputEvent.ALT_MASK)); //Hot key Setting
-		mainMenu.add(new JMenuItem("Restore"));
-		mainMenu.getItem(3).setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.ALT_MASK)); //Hot key Setting
+		mainMenu.add(editEmail);
+		mainMenu.add(editMaster);
 		mainMenu.addSeparator(); //separator
 		
 		mainMenu.add(logOut);
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_MASK ^ InputEvent.ALT_MASK)); //Hot key Setting
 		mainMenu.addSeparator();
 		mainMenu.add(exit);
-		mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('Q', InputEvent.ALT_MASK)); //Hot key Setting
-		//mainMenu.add(version);
-		//mainMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_MASK)); //Hot key Setting
 		helpMenu.add(info);
-		helpMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('I', InputEvent.CTRL_MASK)); //Hot key Setting
 
 		//add menu to menubar
 		menuBar.add(mainMenu);
@@ -208,6 +209,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    jp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+
 	private void eventUp(){
 	    jt.addMouseListener(this);
 	    
@@ -217,6 +219,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    bt_del.addActionListener(this);
 	    bt_up.addActionListener(this);
 	    bt_search.addActionListener(this);
+	    //bt_encrypt.addActionListener(this);
 	    
 	    form.bt_input.addActionListener(this);
 	    form.bt_cancel.addActionListener(this);
@@ -224,6 +227,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    form_search.bt_input.addActionListener(this);
 	    form_search.bt_cancel.addActionListener(this);
 	    
+	    form_email.bt_input.addActionListener(this);
+	    form_email.bt_cancel.addActionListener(this);
+	    
+	    form_master.bt_input.addActionListener(this);
+	    form_master.bt_cancel.addActionListener(this);
+	    
+	    editEmail.addActionListener(this);
 	    editMaster.addActionListener(this);
 	    logOut.addActionListener(this);
 	    exit.addActionListener(this);
@@ -485,6 +495,124 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			form_search.setVisible(false);
 			jp.setVisible(true);
 		}
+		
+		else if(ob==editEmail) {
+			form_email.initEditEmail();
+			form_email.setVisible(true);
+		}
+		else if(ob==form_email.bt_input){
+			String email = form_email.tf_email.getText();
+			
+			if(email == null || email.length() == 0){
+				JOptionPane.showMessageDialog(form_email, "Input New Email!!"); 
+				form_email.tf_email.requestFocus();
+				return;
+			}			
+
+			String sql = "UPDATE `account` SET `email` = '"+email+"' WHERE `no` = "+id_num+""; 
+			try {
+				st.executeUpdate(sql);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			form_email.setVisible(false);
+			jp.setVisible(true);
+		}
+		else if(ob==form_email.bt_cancel){
+			form_email.setVisible(false);
+			jp.setVisible(true);
+		}
+		
+		else if(ob==editMaster) {
+			form_master.initEditMaster();
+			form_master.setVisible(true);
+		}
+		else if(ob==form_master.bt_input){
+			String current = form_master.tf_current.getText();
+			String pw= form_master.tf_pw.getText();
+			String confirm= form_master.tf_confirm.getText();
+			String check = null;
+			
+			String sql2 = "SELECT `pw` from `account` where `no` = "+id_num+"";
+
+			try {
+				rs = st.executeQuery(sql2);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+					
+			try {
+				if (st.execute(sql2)) {
+					rs = st.getResultSet();
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			try {
+				while (rs.next())
+				{
+					check = rs.getString("pw");
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+
+			//check null - if there is no input in any of the fields, do not accept
+			
+			if(!check.equals(current))
+			{
+				JOptionPane.showMessageDialog(form_master, "Current Password is wrong!!"); 
+				form_master.tf_pw.requestFocus();
+				return;				
+			}
+			
+			if(current == null || current.length() == 0)
+			{
+				JOptionPane.showMessageDialog(form_master, "Input Current Password!!"); 
+				form_master.tf_pw.requestFocus();
+				return;				
+			}
+			
+			if(pw == null  || pw.length() == 0){
+				JOptionPane.showMessageDialog(form_master, "Input New Password!!"); 
+				form_master.tf_pw.requestFocus();
+				return;
+			}
+		      
+			if(confirm.length()==0){
+				JOptionPane.showMessageDialog(form_master, "Confirm New Password!!"); 
+				form_master.tf_confirm.requestFocus();
+				return;
+			}
+			
+			if(confirm.equals(pw) == false)
+			{
+				JOptionPane.showMessageDialog(form_master, "Password not Confirmed properly! Try Again!!"); 
+				form_master.tf_confirm.requestFocus();
+				return;
+			}
+			
+			String sql = "UPDATE `account` SET `pw` = '"+pw+"' WHERE `no` = "+id_num+""; 
+			try {
+				st.executeUpdate(sql);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			form_master.setVisible(false);
+			jp.setVisible(true);
+		}
+		else if(ob==form_master.bt_cancel){
+			form_master.setVisible(false);
+			jp.setVisible(true);
+		}
 	
 		//DB�뿰�룞�씠 �븘吏� �븞�릱�쑝誘�濡� 濡쒓렇�븘�썐 �썑 �옱濡쒓렇�씤�떆 �닔�젙 �뜲�씠�꽣�뒗 紐⑤몢 ���옣�릺吏� �븡�쓬
 		else if(ob==logOut){			
@@ -493,7 +621,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			Encryptor encrypterMain = Encryptor.getInstance();
 			
 			SecretKey key = encrypterMain.getKey();				
-			String temp = new String(encrypterMain.getSecretKey(key));
+			String temp = new String(encrypterMain.getSecretKeys(key));
 			
 			try {
 				rs = st.executeQuery(pw_query);
@@ -567,7 +695,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	        String subject = "Thanks for using our IPMS.";
 	        String body = "Dear "+user_name+"\n"
 	        			+"Thanks for using our IPMS service.\n"+
-	        		"Your decryption key is "+str+"\n"
+	        		"Your decryption key is "+temp+"\n"
 	        		+"Many thanks for your time";
 	         
 	        //properties 설정
@@ -648,7 +776,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			Encryptor encrypterMain = Encryptor.getInstance();
 			
 			SecretKey key = encrypterMain.getKey();				
-			String temp = new String(encrypterMain.getSecretKey(key));
+			String temp = new String(encrypterMain.getSecretKeys(key));
 			
 			try {
 				rs = st.executeQuery(pw_query);
@@ -843,5 +971,54 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 
 	        output.close();
 	 }
+
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
