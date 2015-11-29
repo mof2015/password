@@ -335,7 +335,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			form_search.setVisible(false);
 			jp.setVisible(true);
 		}
-		//DB연동이 아직 안됐으므로 로그아웃 후 재로그인시 수정 데이터는 모두 저장되지 않음
+
 		else if(ob==editMaster) {
 			form_master.initEditMaster();
 			form_master.setVisible(true);
