@@ -1,5 +1,6 @@
 package db_connec_test;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -27,9 +28,20 @@ import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
 
+
+
+
+
+
+
+
+
 //library for email
 import java.util.Properties;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -45,10 +57,12 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	DefaultTableModel dtm;
 	InputForm form;
 	SearchForm form_search;
+	EditMasterForm form_master;
 	int srow;
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
 	JMenu helpMenu = new JMenu("Help");
+	JMenuItem editMaster = new JMenuItem("Edit master password");
 	JMenuItem logOut = new JMenuItem("Log Out");
 	JMenuItem exit = new JMenuItem("Exit");
 	JMenuItem version = new JMenuItem("Version");
@@ -57,6 +71,15 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	JLabel label, label_info;
 	JPanel northp,southp;
 	JButton bt_add, bt_del, bt_up, bt_search;
+
+	
+	static Encryptor encryptor = new Encryptor();
+	String encodedEncryptedValue = "";
+	Cipher aesCipher = null;
+	SecretKey secretKey = null;
+	KeyGenerator keyGen = null;
+	byte[] byteCipherText = null;
+	
 	
 	Object[][] rowData={};
 	
@@ -66,6 +89,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	 public static Connection con;
 	 public static Statement st;
 	 public static ResultSet rs;
+	 public static Statement st2;
+	 public static ResultSet rs2;
 	 
 	 public static String name_edit;
 	 public static String url_edit;
@@ -91,6 +116,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		
+		st2= con.createStatement();
 
 		dtm = new DefaultTableModel(rowData, columnNames);
 		
@@ -197,6 +224,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    form_search.bt_input.addActionListener(this);
 	    form_search.bt_cancel.addActionListener(this);
 	    
+	    editMaster.addActionListener(this);
 	    logOut.addActionListener(this);
 	    exit.addActionListener(this);
 	    info.addActionListener(this);
@@ -460,6 +488,44 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	
 		//DB�뿰�룞�씠 �븘吏� �븞�릱�쑝誘�濡� 濡쒓렇�븘�썐 �썑 �옱濡쒓렇�씤�떆 �닔�젙 �뜲�씠�꽣�뒗 紐⑤몢 ���옣�릺吏� �븡�쓬
 		else if(ob==logOut){			
+			String pw_query = "select * from `keys` where `acnt_no` = "+id_num+"";
+
+			Encryptor encrypterMain = Encryptor.getInstance();
+			
+			SecretKey key = encrypterMain.getKey();				
+			String temp = new String(encrypterMain.getSecretKey(key));
+			
+			try {
+				rs = st.executeQuery(pw_query);
+			} catch (SQLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+					
+			try {
+				if (st.execute(pw_query)) {
+					rs = st.getResultSet();
+				}
+			} catch (SQLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+
+			try {
+				while (rs.next()) {
+					String user_pw = rs.getString("pw_sequence");							
+					String encryptedValue = encrypterMain.EncryptString(user_pw, key);		
+					String update_query = "UPDATE `keys` SET `pw_sequence` = '"+encryptedValue+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+user_pw+"'";
+					
+					st2.executeUpdate(update_query);				
+					System.out.println(encryptedValue);
+				}
+			} catch (SQLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}	
+			
+			
 			String sql2 = "select * from `account` where `no` = "+id_num+"";		
 			
 			try {
@@ -577,6 +643,43 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			gui.setTitle("IMPS Ver.1.0");
 		}
 		else if(ob==exit){		
+			String pw_query = "select * from `keys` where `acnt_no` = "+id_num+"";
+
+			Encryptor encrypterMain = Encryptor.getInstance();
+			
+			SecretKey key = encrypterMain.getKey();				
+			String temp = new String(encrypterMain.getSecretKey(key));
+			
+			try {
+				rs = st.executeQuery(pw_query);
+			} catch (SQLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+					
+			try {
+				if (st.execute(pw_query)) {
+					rs = st.getResultSet();
+				}
+			} catch (SQLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+
+			try {
+				while (rs.next()) {
+					String user_pw = rs.getString("pw_sequence");							
+					String encryptedValue = encrypterMain.EncryptString(user_pw, key);		
+					String update_query = "UPDATE `keys` SET `pw_sequence` = '"+encryptedValue+"' WHERE `acnt_no` = "+id_num+" and `pw_sequence` = '"+user_pw+"'";
+					
+					st2.executeUpdate(update_query);				
+					System.out.println(encryptedValue);
+				}
+			} catch (SQLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}	
+			
 			String sql2 = "select * from `account` where `no` = "+id_num+"";		
 			
 			try {
@@ -618,7 +721,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	        String subject = "Thanks for using our IPMS.";
 	        String body = "Dear "+user_name+"\n"
 	        			+"Thanks for using our IPMS service.\n"+
-	        		"Your decryption key is "+str+"\n"
+	        		"Your decryption key is "+temp+"\n"
 	        		+"Many thanks for your time";
 	         
 	        //properties 설정
