@@ -4,6 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,11 +16,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class Encrypter {
     private String iv;
     private Key keySpec;
- 
     public Encrypter(String key) throws UnsupportedEncodingException {
-        this.iv = key.substring(0, 16);
- 
-        byte[] keyBytes = new byte[16];
+    	this.iv = key.substring(0, 16);
+    	byte[] keyBytes = new byte[16];
         byte[] b = key.getBytes("UTF-8");
         int len = b.length;
         if(len > keyBytes.length)
@@ -31,6 +30,31 @@ public class Encrypter {
     }
  
     // 암호화
+    public String generateKey(){
+    	StringBuffer temp=new StringBuffer();
+    	Random r = new Random();
+    	String chars = "[A-Za-z]";
+    	String digits = "[0-9]";
+    	String spChars = "~!@#$%^&*(){}[]:;<>,./?";
+    	int rand=0;
+    	int rc=0;
+    	int rd=0;
+    	int rsp=0;
+    	while(temp.length()<16){
+    		rand=r.nextInt(2);
+    		rc=r.nextInt(chars.length());
+    		rd=r.nextInt(digits.length());
+    		rsp=r.nextInt(spChars.length());
+    		if(rand==0)
+    			temp.append(chars.charAt(rc));
+    		else if(rand==1)
+    			temp.append(digits.charAt(rd));
+    		else
+    			temp.append(spChars.charAt(rsp));
+    	}
+    	return temp.toString();
+    }
+    
     public String aesEncode(String str) throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, 
                                                      NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, 
                                                      IllegalBlockSizeException, BadPaddingException{
