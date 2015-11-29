@@ -13,7 +13,7 @@ public class Checker {
 	 * 5. 패스워드에서 3회이상 연속 반복되는 숫자나 문자가 포함되는가(ex. 11111, aaaaa)
 	 * 6. 패스워드에 숫자,문자 조합 여부 (숫자 혹은 문자만으로 이루어진 패스워드는 인정하지 않음)
 	 */
-	public int checker(String st) throws IOException{
+	public int checker(String st) {
 		int score=0;
 		int includeSp=0;
 		//int existNum=0;
@@ -71,15 +71,31 @@ public class Checker {
 		}
 	*/
 //-------------------------흔한 패스워드 사용 여부 체크----------------------------------
-		FileReader fr = new FileReader("common.txt");
+		FileReader fr = null;
+		try {
+			fr = new FileReader("common.txt");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		BufferedReader br = new BufferedReader(fr);
 		String tempStr="";
-		while( (tempStr=br.readLine())!=null){
-			if(st.contains(tempStr)){
-				score -= 10;
+		try {
+			while( (tempStr=br.readLine())!=null){
+				if(st.contains(tempStr)){
+					score -= 10;
+				}
 			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		fr.close();
+		try {
+			fr.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //-------------------------점수 측정------------------------------------------------------
 	
 		score+=st.length()*4;
