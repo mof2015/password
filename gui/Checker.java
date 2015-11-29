@@ -241,7 +241,7 @@ public class Checker {
 		//score *= existChar;
 		//score *= existNum;
 
-		System.out.println(score);
+		//System.out.println(score);
 		
 		return score;
 		//최종점수 반환
