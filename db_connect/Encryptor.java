@@ -1,112 +1,83 @@
 package db_connec_test;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import java.util.Base64;
-import java.lang.*;
-import java.util.Base64;
-
+  
 public class Encryptor {
-
-	static Encryptor encryptor = new Encryptor();
-	String encodedEncryptedValue = "";
-	Cipher aesCipher = null;
-	SecretKey secretKey = null;
-	KeyGenerator keyGen = null;
-	byte[] byteCipherText = null;
-
-	public Encryptor() {
-		try {
-			keyGen = KeyGenerator.getInstance("AES");
-//			System.out.println("keygen = "+keyGen);
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		keyGen.init(128);
-		secretKey = keyGen.generateKey();
-//		System.out.println("secretKey = "+secretKey);
-	}
-	public SecretKey getKey()
-	{
-		return secretKey;		
-	}
-
-	public static Encryptor getInstance() {
-		return encryptor;
-	}
-
-	String EncryptString(String plainData, SecretKey key) {
-		try {
-			aesCipher = Cipher.getInstance("AES");	
-//			System.out.println("aesCipher : "+aesCipher);
-			aesCipher.init(Cipher.ENCRYPT_MODE, key);
-			byte[] byteDataToEncrypt = plainData.getBytes();
-/*			System.out.println("byteDataToEncrypt="
-					+ byteDataToEncrypt.toString());
-*/			byteCipherText = aesCipher.doFinal(byteDataToEncrypt);
-//			System.out.println("byteCipherText=" + byteCipherText.toString());
-			encodedEncryptedValue = Base64.getEncoder().encodeToString(byteCipherText);
-/*			System.out.println("encodedEncryptedValue Text="
-					+ encodedEncryptedValue);
-*/		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return encodedEncryptedValue;
-	}
-
-	String DeCryptEncryptedString(String encryptedString, SecretKey key) {
-		byte[] byteDecryptedText = null;
-		try {
-			aesCipher.init(Cipher.DECRYPT_MODE, key,
-					aesCipher.getParameters());
-			byteDecryptedText = aesCipher.doFinal(byteCipherText);
-		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidAlgorithmParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {	
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		encryptedString = new String(byteDecryptedText);
-		return encryptedString;
-	}
-
-	String getSecretKey(SecretKey key){
-		return Base64.getEncoder().encodeToString(key.getEncoded());
-	}
-	void setSecretKey(String encodedKey){
-		byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
-		secretKey = new SecretKeySpec(decodedKey,0,decodedKey.length,"AES");
-	}
+    private String iv;
+    private Key keySpec;
+    public Encryptor(String key) throws UnsupportedEncodingException {
+    	this.iv = key.substring(0, 16);
+    	byte[] keyBytes = new byte[16];
+        byte[] b = key.getBytes("UTF-8");
+        int len = b.length;
+        if(len > keyBytes.length)
+            len = keyBytes.length;
+        System.arraycopy(b, 0, keyBytes, 0, len);
+        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
+ 
+        this.keySpec = keySpec;
+    }
+ 
+    // 암호화
+    public String generateKey(){
+    	StringBuffer temp=new StringBuffer();
+    	Random r = new Random();
+    	String chars = "[A-Za-z]";
+    	String digits = "[0-9]";
+    	String spChars = "~!@#$%^&*(){}[]:;<>,./?";
+    	int rand=0;
+    	int rc=0;
+    	int rd=0;
+    	int rsp=0;
+    	while(temp.length()<16){
+    		rand=r.nextInt(2);
+    		rc=r.nextInt(chars.length());
+    		rd=r.nextInt(digits.length());
+    		rsp=r.nextInt(spChars.length());
+    		if(rand==0)
+    			temp.append(chars.charAt(rc));
+    		else if(rand==1)
+    			temp.append(digits.charAt(rd));
+    		else
+    			temp.append(spChars.charAt(rsp));
+    	}
+    	return temp.toString();
+    }
+    
+    public String aesEncode(String str) throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, 
+                                                     NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, 
+                                                     IllegalBlockSizeException, BadPaddingException{
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
+ 
+        byte[] encrypted = c.doFinal(str.getBytes("UTF-8"));
+        String enStr = new String(Base64.getEncoder().encode(encrypted));
+ 
+        return enStr;
+    }
+ 
+    //복호화
+    public String aesDecode(String str) throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, 
+                                                     NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, 
+                                                     IllegalBlockSizeException, BadPaddingException {
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
+ 
+        byte[] byteStr = Base64.getDecoder().decode(str.getBytes());
+        
+        return new String(c.doFinal(byteStr),"UTF-8");
+    }
 }
