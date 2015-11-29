@@ -263,8 +263,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	
 				String sql = "INSERT INTO `keys` (`acnt_no`, `title`, `url`, `id_sequence`, `pw_sequence`) VALUES ("+id_num+","+query_name+","+query_link+","+query_id+","+query_pw+")";
 				
-				String sql2 = "select * from `account` where `no` = "+id_num+"";
-				
 				try {
 					st.executeUpdate(sql);
 				} catch (SQLException e2) {
@@ -277,111 +275,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 				try {
 					fileSave();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}				
-				
-
-				
-				try {
-					rs = st.executeQuery(sql2);
-				} catch (SQLException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-				
-				try {
-					if (st.execute(sql2)) {
-						rs = st.getResultSet();
-					}
-				} catch (SQLException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-				
-				String str = null;
-				String user_name = null;
-				
-				try {
-					while (rs.next()) {
-						str = rs.getString("email");
-						user_name = rs.getString("name");
-					    }
-				} catch (SQLException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}	
-				
-				// 메일 관련 정보
-		        String host = "smtp.gmail.com";
-		        String username = "ku.mofteam@gmail.com";
-		        String password = "1q2w3e@@";
-		         
-		        // 메일 내용
-		        String recipient = ""+str+"";
-		        String subject = "Thanks for using our IPMS.";
-		        String body = "Dear "+user_name+"\n"
-		        			+"Thanks for using our IPMS service.\n"+
-		        		"Your decryption key is "+str+"\n"
-		        		+"Many thanks for your time";
-		         
-		        //properties 설정
-		        Properties props = new Properties();
-		        props.put("mail.smtps.auth", "true");
-		        
-		        // 메일 세션
-		        Session session = Session.getDefaultInstance(props);
-		        MimeMessage msg = new MimeMessage(session);
-		 
-		        // 메일 관련
-		        try {
-					msg.setSubject(subject);
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        try {
-					msg.setText(body);
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        try {
-					msg.setFrom(new InternetAddress(username));
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        try {
-					msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		 
-		        // 발송 처리
-		        Transport transport = null;
-				try {
-					transport = session.getTransport("smtps");
-				} catch (NoSuchProviderException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        try {
-					transport.connect(host, username, password);
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        try {
-					transport.sendMessage(msg, msg.getAllRecipients());
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        try {
-					transport.close();
-				} catch (MessagingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}				
@@ -566,7 +459,112 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 		}
 	
 		//DB�뿰�룞�씠 �븘吏� �븞�릱�쑝誘�濡� 濡쒓렇�븘�썐 �썑 �옱濡쒓렇�씤�떆 �닔�젙 �뜲�씠�꽣�뒗 紐⑤몢 ���옣�릺吏� �븡�쓬
-		else if(ob==logOut){
+		else if(ob==logOut){			
+			String sql2 = "select * from `account` where `no` = "+id_num+"";		
+			
+			try {
+				rs = st.executeQuery(sql2);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			try {
+				if (st.execute(sql2)) {
+					rs = st.getResultSet();
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			String str = null;
+			String user_name = null;
+			
+			try {
+				while (rs.next()) {
+					str = rs.getString("email");
+					user_name = rs.getString("name");
+				    }
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}	
+			
+			// 메일 관련 정보
+	        String host = "smtp.gmail.com";
+	        String username = "ku.mofteam@gmail.com";
+	        String password = "1q2w3e@@";
+	         
+	        // 메일 내용
+	        String recipient = ""+str+"";
+	        String subject = "Thanks for using our IPMS.";
+	        String body = "Dear "+user_name+"\n"
+	        			+"Thanks for using our IPMS service.\n"+
+	        		"Your decryption key is "+str+"\n"
+	        		+"Many thanks for your time";
+	         
+	        //properties 설정
+	        Properties props = new Properties();
+	        props.put("mail.smtps.auth", "true");
+	        
+	        // 메일 세션
+	        Session session = Session.getDefaultInstance(props);
+	        MimeMessage msg = new MimeMessage(session);
+	 
+	        // 메일 관련
+	        try {
+				msg.setSubject(subject);
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				msg.setText(body);
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				msg.setFrom(new InternetAddress(username));
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	 
+	        // 발송 처리
+	        Transport transport = null;
+			try {
+				transport = session.getTransport("smtps");
+			} catch (NoSuchProviderException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				transport.connect(host, username, password);
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				transport.sendMessage(msg, msg.getAllRecipients());
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				transport.close();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}					
+			
 			jp.setVisible(false);
 			Intro gui =new Intro();
 			gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -578,7 +576,112 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 
 			gui.setTitle("IMPS Ver.1.0");
 		}
-		else if(ob==exit){
+		else if(ob==exit){		
+			String sql2 = "select * from `account` where `no` = "+id_num+"";		
+			
+			try {
+				rs = st.executeQuery(sql2);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			try {
+				if (st.execute(sql2)) {
+					rs = st.getResultSet();
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();	
+			}
+			
+			String str = null;
+			String user_name = null;
+			
+			try {
+				while (rs.next()) {
+					str = rs.getString("email");
+					user_name = rs.getString("name");
+				    }
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}	
+			
+			// 메일 관련 정보
+	        String host = "smtp.gmail.com";
+	        String username = "ku.mofteam@gmail.com";
+	        String password = "1q2w3e@@";
+	         
+	        // 메일 내용
+	        String recipient = ""+str+"";
+	        String subject = "Thanks for using our IPMS.";
+	        String body = "Dear "+user_name+"\n"
+	        			+"Thanks for using our IPMS service.\n"+
+	        		"Your decryption key is "+str+"\n"
+	        		+"Many thanks for your time";
+	         
+	        //properties 설정
+	        Properties props = new Properties();
+	        props.put("mail.smtps.auth", "true");
+	        
+	        // 메일 세션
+	        Session session = Session.getDefaultInstance(props);
+	        MimeMessage msg = new MimeMessage(session);
+	 
+	        // 메일 관련
+	        try {
+				msg.setSubject(subject);
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				msg.setText(body);
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				msg.setFrom(new InternetAddress(username));
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	 
+	        // 발송 처리
+	        Transport transport = null;
+			try {
+				transport = session.getTransport("smtps");
+			} catch (NoSuchProviderException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				transport.connect(host, username, password);
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				transport.sendMessage(msg, msg.getAllRecipients());
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        try {
+				transport.close();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
+	        
 			jp.setVisible(false);
 		}
 		else if(ob==info){
