@@ -2,6 +2,7 @@ package db_connec_test;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.awt.Component;
@@ -32,6 +33,9 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
+
+
+
 //library for email
 import java.util.Properties;
 import java.util.Random;
@@ -56,6 +60,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	JComboBox box;
 	DefaultTableModel dtm;
 	InputForm form;
+	DeactivateForm form_deactivate;
 	SearchForm form_search;
 	EditMasterForm form_master;
 	EditEmailForm form_email;
@@ -63,6 +68,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	JMenuBar menuBar = new JMenuBar();
 	JMenu mainMenu = new JMenu("Menu");
 	JMenu helpMenu = new JMenu("Help");
+	JMenuItem Deactivate = new JMenuItem("Account Setting");
 	JMenuItem editMaster = new JMenuItem("Edit master password");
 	JMenuItem editEmail = new JMenuItem("Edit master email");
 	JMenuItem logOut = new JMenuItem("Log Out");
@@ -179,6 +185,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 		
 		form=new InputForm();
 		form_search = new SearchForm();
+		form_deactivate = new DeactivateForm();
 		form_email = new EditEmailForm();
 		form_master = new EditMasterForm();
 		box = form_search.box;
@@ -211,6 +218,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 		eventUp();
 
 		//create menu
+		mainMenu.add(Deactivate);
 		mainMenu.add(editEmail);
 		mainMenu.add(editMaster);
 		mainMenu.addSeparator(); //separator
@@ -243,6 +251,9 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	    bt_search.addActionListener(this);
 	    //bt_encrypt.addActionListener(this);
 	    
+	    form_deactivate.bt_input.addActionListener(this);
+	    form_deactivate.bt_cancel.addActionListener(this);
+	    
 	    form.bt_input.addActionListener(this);
 	    form.bt_cancel.addActionListener(this);
 	    
@@ -254,7 +265,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 	    
 	    form_master.bt_input.addActionListener(this);
 	    form_master.bt_cancel.addActionListener(this);
-	    
+
+	    Deactivate.addActionListener(this);
 	    editEmail.addActionListener(this);
 	    editMaster.addActionListener(this);
 	    logOut.addActionListener(this);
@@ -525,6 +537,96 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			jp.setVisible(true);
 		}
 		
+		else if(ob==Deactivate) {
+			form_deactivate.initDeactivate();
+			form_deactivate.setVisible(true);
+		}
+		else if(ob==form_deactivate.bt_input){
+			String sql2 = "SELECT * FROM `account` WHERE `no` = "+no_id+"";
+			String current_pw = form_deactivate.tf_pw.getText();
+			String confirm_pw = form_deactivate.tf_confirm.getText();
+			String check_pw = null;
+			String ori_pw = null;
+			String salt = null;
+
+			try {
+				rs = st.executeQuery(sql2);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			try {
+				while(rs.next()) {
+					ori_pw = rs.getString("pw");
+					salt = rs.getString("id");
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			check_pw = hash256(current_pw + salt);
+			
+			if(current_pw == null || current_pw.length() == 0){
+				JOptionPane.showMessageDialog(form_deactivate, "Input Your Password!!"); 
+				form_deactivate.tf_pw.requestFocus();
+				return;
+			}
+			
+			if(confirm_pw == null || confirm_pw.length() == 0){
+				JOptionPane.showMessageDialog(form_deactivate, "Confirm Your Password!!"); 
+				form_deactivate.tf_confirm.requestFocus();
+				return;
+			}	
+			
+			if(current_pw.equals(confirm_pw) == false){
+				JOptionPane.showMessageDialog(form_deactivate, "Password not Confirmed properly! Try Again!!"); 
+				form_deactivate.tf_confirm.requestFocus();
+				return;
+			}	
+			
+			if(ori_pw.equals(check_pw) == false){
+				JOptionPane.showMessageDialog(form_deactivate, "Incorrect Password"); 
+				form_deactivate.tf_pw.requestFocus();
+				return;
+			}
+			
+			String delete = "DELETE FROM `keys` WHERE `acnt_no` = "+id_num+""; 
+				
+			try {
+				st.executeUpdate(delete);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}	
+
+			String sql = "DELETE FROM `account` WHERE `no` = "+id_num+""; 
+			
+			try {
+				st.executeUpdate(sql);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			form_deactivate.setVisible(false);
+			jp.setVisible(false);
+			
+			Intro gui =new Intro();
+			gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			gui.setSize(500,300);
+			gui.setLocationRelativeTo(null);
+			gui.setVisible(true);
+			gui.setResizable(false);
+
+			gui.setTitle("IMPS Ver.1.0");
+		}
+		else if(ob==form_deactivate.bt_cancel){
+			form_deactivate.setVisible(false);
+			jp.setVisible(true);
+		}
+		
 		else if(ob==editEmail) {
 			form_email.initEditEmail();
 			form_email.setVisible(true);
@@ -563,9 +665,10 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			String pw= form_master.tf_pw.getText();
 			String confirm= form_master.tf_confirm.getText();
 			String check = null;
+			String salt = null;
 			
-			String sql2 = "SELECT `pw` from `account` where `no` = "+id_num+"";
-
+			String sql2 = "SELECT * from `account` where `no` = "+id_num+"";
+		
 			try {
 				rs = st.executeQuery(sql2);
 			} catch (SQLException e2) {
@@ -586,6 +689,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 				while (rs.next())
 				{
 					check = rs.getString("pw");
+					salt = rs.getString("id");
 				}
 			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
@@ -593,6 +697,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 			}
 
 			//check null - if there is no input in any of the fields, do not accept
+			
+			current = hash256(current+salt);
 			
 			if(!check.equals(current))
 			{
@@ -626,6 +732,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 				form_master.tf_confirm.requestFocus();
 				return;
 			}
+			
+			pw = hash256(pw+salt);
 			
 			String sql = "UPDATE `account` SET `pw` = '"+pw+"' WHERE `no` = "+id_num+""; 
 			try {
@@ -1026,6 +1134,28 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 
 		}
 	}
+	 
+	public String hash256(String str){
+
+		String encryption = ""; 
+
+		try{
+			MessageDigest hash = MessageDigest.getInstance("SHA-256"); 
+			hash.update(str.getBytes()); 
+			byte byteData[] = hash.digest();
+			StringBuffer sb = new StringBuffer(); 
+
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			encryption = sb.toString();
+		}catch(NoSuchAlgorithmException e){
+			e.printStackTrace(); 
+			encryption = null; 
+		}
+
+		return encryption;
+	}
 
 	 public void mouseClicked(MouseEvent e) {
 	     int srow= jt.getSelectedRow();		//row index
@@ -1076,8 +1206,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener, Windo
 
 	        output.close();
 	 }
-
-
+	 
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
