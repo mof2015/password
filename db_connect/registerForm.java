@@ -1,5 +1,7 @@
 package db_connec_test;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -132,8 +134,9 @@ public class registerForm extends JFrame {
 
 				try {
 					// bind params into sql statement
+					String hashed_pw = SHA256(pw_input+id_input);
 					st.setString(1, id_input);
-					st.setString(2, pw_input);
+					st.setString(2, hashed_pw);
 					st.setString(3, name_input);
 					st.setString(4, mail_input);
 
@@ -151,5 +154,27 @@ public class registerForm extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false); // fix frame size
 		setVisible(true);
+	}
+	
+	public String SHA256(String str){
+
+		String encryption = ""; 
+
+		try{
+			MessageDigest hash = MessageDigest.getInstance("SHA-256"); 
+			hash.update(str.getBytes()); 
+			byte byteData[] = hash.digest();
+			StringBuffer sb = new StringBuffer(); 
+
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			encryption = sb.toString();
+		}catch(NoSuchAlgorithmException e){
+			e.printStackTrace(); 
+			encryption = null; 
+		}
+
+		return encryption;
 	}
 }
