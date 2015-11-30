@@ -13,7 +13,6 @@ public class Generator {
 	int max=15;
 	int min=10;
 	
-	private StringBuffer sb = new StringBuffer();
 	private String stra=new String("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	private String strn=new String("0123456789");
 	private String strsp=new String("!@#$%^&*");//(),.?/[]{};:|-=_+은 생략
@@ -72,6 +71,9 @@ public class Generator {
 
 
 	String createRandomPassword(){
+
+		StringBuffer sb = new StringBuffer();
+		
 		int tea=0;
 		int ten=0;
 		int tes=0;
@@ -274,5 +276,4 @@ public class Generator {
 		}
    		return sb.substring(0,outputLength);
 	}
-
 }
