@@ -1,5 +1,7 @@
 package db_connec_test;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -125,7 +127,8 @@ public class Intro extends JFrame {
 						if (isIDCorrect(id_input, input)) {
 							new decryptForm(no_id);
 							dispose();
-} 						else {
+							}
+						else {
 							JOptionPane.showMessageDialog(controllingFrame,
 							"Invalid ID or Password!! Try again!",
 							"Error Message",
@@ -141,8 +144,6 @@ public class Intro extends JFrame {
 	    			passwordField.selectAll();
 	    			resetFocus();
 	    		}
-			 
-		    
 	    	}
 	}
 	
@@ -152,8 +153,10 @@ public class Intro extends JFrame {
 		
 		con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/mof?useUnicode=true&characterEncoding=euckr", "root", "1234");
 		st = con.prepareStatement("SELECT * FROM `account` WHERE `id`=? AND `pw`=?");
+		String hashed_pw = SHA256(input_pw + input);
 		st.setString(1, input);
-		st.setString(2, input_pw);
+		st.setString(2, hashed_pw);
+		
 		
 		rs = st.executeQuery();
 		
@@ -243,5 +246,27 @@ public class Intro extends JFrame {
 		gui.setResizable(false);
 
 		gui.setTitle("IMPS Ver.1.0");
+	}
+
+	public static String SHA256(String str){
+
+		String encryption = ""; 
+
+		try{
+			MessageDigest hash = MessageDigest.getInstance("SHA-256"); 
+			hash.update(str.getBytes()); 
+			byte byteData[] = hash.digest();
+			StringBuffer sb = new StringBuffer(); 
+
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			encryption = sb.toString();
+		}catch(NoSuchAlgorithmException e){
+			e.printStackTrace(); 
+			encryption = null; 
+		}
+
+		return encryption;
 	}
 }
