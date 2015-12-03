@@ -226,9 +226,8 @@ public class Checker {
 		score -= consecNumCnt * 2;
 		score -= consecSpCnt * 2;
 		
-		/**
 		//3회이상 연속 반복되는 숫자나 문자가 포함되는 경우 감점
-		for(int i = 0; i < st.length() - 3; i++)
+		for(int i = 0; i < st.length() - 2; i++)
 		{
 			//if(st.charAt(i) == st.charAt(i + 1) && st.charAt(i) == st.charAt(i + 2))
 			if(st.charAt(i) == st.charAt(i + 1))
@@ -236,7 +235,7 @@ public class Checker {
 				score -= 10;
 			}
 		}
-		*/		
+				
 		//문자나 숫자 둘 중 하나라도 없는 경우 빵점
 		if((containsUpper == 0 && containsLower == 0) || containsNum == 0)
 			score = 0;
