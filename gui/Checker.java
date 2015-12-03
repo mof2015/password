@@ -237,9 +237,9 @@ public class Checker {
 			}
 		}
 		*/		
-		//숫자,문자 중 안 들어간 게 있으면 감점 - 둘 다 포함된 경우 existWord, existNum값은 1로 설정됨
-		//score *= existChar;
-		//score *= existNum;
+		//문자나 숫자 둘 중 하나라도 없는 경우 빵점
+		if((containsUpper == 0 && containsLower == 0) || containsNum == 0)
+			score = 0;
 
 		//System.out.println(score);
 		
