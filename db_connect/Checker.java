@@ -103,29 +103,11 @@ public class Checker {
 		if(containsSp > 0)
 			score += containsSp * 6;
 		
-		if(containsUpper == 0 && containsLower == 0 && containsSp == 0)
-		{
-			score -= containsNum;
-		}
-		
 		if(containsNum == 0 && containsSp == 0)
 		{
 			score -= (containsUpper + containsLower);
 		}
-		/**
-		//부분 문자열이 중복되는 경우 감점
-		for(int i = 1; i < st.length() / 2; i++)
-		{
-			for(int j = 0; j < i; j++)
-			{
-				String sub = st.substring(j, j + i);
-				if(st.substring(j + i + 1, st.length() - 1).contains(sub))
-				{
-					score -= 10;
-				}
-			}
-		}
-		*/
+
 		//연속적으로 숫자/대문자/소문자/특수문자만 나오는 경우
 		for(int i = 0; i < st.length(); i++)
 		{
