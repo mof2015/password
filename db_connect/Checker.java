@@ -14,8 +14,6 @@ public class Checker {
 	public int checker(String st) {
 		int score=0;
 		int includeSp=0;
-		//int existNum=0;
-		//int existChar=0;
 		int containsNum=0;
 		int containsUpper=0;
 		int containsLower=0;
@@ -30,44 +28,7 @@ public class Checker {
 		String strSp= new String("@#$%^&*()-_=+|[]{};:/?.><.");
 		
 		char ch;
-//--------------string의 한 자리 한 자리에 대한 password checking------------
-		/* 숫자가 포함되어있을 경우, 연속되는 숫자의 유무를 확인.
-		 * 3개 이상의 숫자가 연속되어 있으면 그만큼을 계산해서 나중에 뺌
-		 */
-		/**
-		for(int i=0;i<st.length();i++){
-			ch=st.charAt(i);
-			Character cr= new Character(ch);
-			if(strSp.contains(cr.toString())){
-				includeSp++;
-			}
-			if(strNum.contains(cr.toString())){
-				if(consecInt[1]==1)
-					consecInt[2]++;
-				else if(consecInt[0]==1)
-					consecInt[1]=0;
-				else
-					consecInt[0]=1;
-				consecChar[0]=0;
-				consecChar[1]=0;
-				//연속된 문자 초기화
-				existNum = 1;
-			}
-			
-			if(strChar.contains(cr.toString())){
-				if(consecChar[1]==1)
-					consecChar[2]++;
-				else if(consecChar[0]==1)
-					consecChar[1]=0;
-				else
-					consecChar[0]=1;
-				consecInt[0]=0;
-				consecInt[1]=0;
-				//연속된 숫자 초기화
-				existWord = 1;
-			}
-		}
-	*/
+
 //-------------------------흔한 패스워드 사용 여부 체크----------------------------------
 		FileReader fr = null;
 		try {
@@ -130,17 +91,14 @@ public class Checker {
 		if(containsUpper > 0)
 		{
 			score += (st.length() - containsUpper) * 2;
-			//existChar = 1;
 		}
 		if(containsLower > 0)
 		{
 			score += (st.length() - containsLower) * 2;
-			//existChar = 1;
 		}
 		if(containsNum > 0)
 		{
 			score += containsNum * 4;
-			//existNum = 1;
 		}
 		if(containsSp > 0)
 			score += containsSp * 6;
@@ -224,9 +182,8 @@ public class Checker {
 		score -= consecNumCnt * 2;
 		score -= consecSpCnt * 2;
 		
-		/**
 		//3회이상 연속 반복되는 숫자나 문자가 포함되는 경우 감점
-		for(int i = 0; i < st.length() - 3; i++)
+		for(int i = 0; i < st.length() - 2; i++)
 		{
 			//if(st.charAt(i) == st.charAt(i + 1) && st.charAt(i) == st.charAt(i + 2))
 			if(st.charAt(i) == st.charAt(i + 1))
@@ -234,7 +191,7 @@ public class Checker {
 				score -= 10;
 			}
 		}
-		*/		
+				
 		//문자나 숫자 둘 중 하나라도 없는 경우 빵점
 		if((containsUpper == 0 && containsLower == 0) || containsNum == 0)
 			score = 0;
