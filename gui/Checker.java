@@ -32,44 +32,7 @@ public class Checker {
 		String strSp= new String("@#$%^&*()-_=+|[]{};:/?.><.");
 		
 		char ch;
-//--------------string의 한 자리 한 자리에 대한 password checking------------
-		/* 숫자가 포함되어있을 경우, 연속되는 숫자의 유무를 확인.
-		 * 3개 이상의 숫자가 연속되어 있으면 그만큼을 계산해서 나중에 뺌
-		 */
-		/**
-		for(int i=0;i<st.length();i++){
-			ch=st.charAt(i);
-			Character cr= new Character(ch);
-			if(strSp.contains(cr.toString())){
-				includeSp++;
-			}
-			if(strNum.contains(cr.toString())){
-				if(consecInt[1]==1)
-					consecInt[2]++;
-				else if(consecInt[0]==1)
-					consecInt[1]=0;
-				else
-					consecInt[0]=1;
-				consecChar[0]=0;
-				consecChar[1]=0;
-				//연속된 문자 초기화
-				existNum = 1;
-			}
-			
-			if(strChar.contains(cr.toString())){
-				if(consecChar[1]==1)
-					consecChar[2]++;
-				else if(consecChar[0]==1)
-					consecChar[1]=0;
-				else
-					consecChar[0]=1;
-				consecInt[0]=0;
-				consecInt[1]=0;
-				//연속된 숫자 초기화
-				existWord = 1;
-			}
-		}
-	*/
+
 //-------------------------흔한 패스워드 사용 여부 체크----------------------------------
 		FileReader fr = null;
 		try {
