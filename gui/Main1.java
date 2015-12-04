@@ -117,6 +117,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    jp.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
+	//action handling
 	private void eventUp(){
 	    jt.addMouseListener(this);
 	    
@@ -126,7 +127,6 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 	    bt_del.addActionListener(this);
 	    bt_up.addActionListener(this);
 	    bt_search.addActionListener(this);
-	    //bt_encrypt.addActionListener(this);
 	    
 	    form.bt_input.addActionListener(this);
 	    form.bt_cancel.addActionListener(this);
@@ -165,7 +165,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 				form.tf_name.requestFocus();
 				return;
 			}
-		      
+		      	//alert message for any empty input
 			if(id.length()==0){
 				JOptionPane.showMessageDialog(form, "Input ID!!"); 
 				form.tf_id.requestFocus();
@@ -189,8 +189,8 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 				form.tf_pw.requestFocus();
 				return;
 			}
-			
-			if(form.getTitle().equals("Add new")){		//add new form
+			//add new form
+			if(form.getTitle().equals("Add new")){		
 				Object rowData[] = {name, id, pw, link};
 				dtm.addRow(rowData);
 				try {
@@ -216,13 +216,13 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			form.setVisible(false);
 			jp.setVisible(true);
 		}
-		
-		else if(ob==form.bt_cancel){	//cancel button
+		//cancel button
+		else if(ob==form.bt_cancel){
 			form.setVisible(false);
 			jp.setVisible(true);
 		}
-		
-		else if(ob==bt_del){	//delete button
+		//delete button
+		else if(ob==bt_del){	
 			srow = jt.getSelectedRow();
 			if(srow==-1){
 				JOptionPane.showMessageDialog(jp,"Select row to delete!!");
@@ -232,6 +232,7 @@ public class Main1 extends Intro implements MouseListener, ActionListener {
 			String id  = (String) jt.getValueAt(srow,1);
 			String pw  = (String) jt.getValueAt(srow,2);
 			String link  = (String) jt.getValueAt(srow,3);
+			//delete from the table
 			for(int i=0; i<jt.getRowCount(); i++){
 				if(name.equals(jt.getValueAt(i,0)) && id.equals(jt.getValueAt(i, 1)) && pw.equals(jt.getValueAt(i, 2)) && link.equals(jt.getValueAt(i,3))){
 					dtm.removeRow(i);
