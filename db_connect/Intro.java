@@ -8,12 +8,10 @@ import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.awt.event.*;
 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class Intro extends JFrame {
 	JMenuBar menubar;
 	JMenu help;
