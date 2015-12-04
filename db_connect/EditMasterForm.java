@@ -1,15 +1,13 @@
 package db_connec_test;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+@SuppressWarnings("serial")
 public class EditMasterForm extends JFrame {
 	JLabel la_box, la_box2, la_box0;
 	JTextField tf_pw, tf_confirm, tf_current;
