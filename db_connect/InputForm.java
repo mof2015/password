@@ -552,7 +552,6 @@ public class InputForm extends JFrame{
 		bt_input.setBounds(30, 400, 60, 30);
 		bt_cancel.setBounds(100, 400, 120, 30);
 		
-		
 		//Component addition
 		add(la_len);
 		add(tf_len);
