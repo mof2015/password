@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class decryptForm extends JFrame {
 	JLabel la_key;
 	JTextField tf_key;
