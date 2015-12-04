@@ -5,13 +5,13 @@ import java.math.*;
 
 public class Checker {
 	/* password checker
-	 * ë‹¤ìŒê³¼ ê°™ì€ ì¡°ê±´ì„ í™•ì¸í•˜ì—¬ì•¼ í•œë‹¤
-	 * 1. íŒ¨ìŠ¤ì›Œë“œ ê¸¸ì´
-	 * 2. íŒ¨ìŠ¤ì›Œë“œì˜ íŠ¹ìˆ˜ë¬¸ìž í¬í•¨ ì—¬ë¶€
-	 * 3. íŒ¨ìŠ¤ì›Œë“œì—ì„œ ì—°ì†ì ì¸ ë‹¨ì–´ì—´ í˜¹ì€ ë¬¸ìžì—´ì´ í¬í•¨ë˜ëŠ”ê°€(ex. 12345, abcde)
-	 * 4. íŒ¨ìŠ¤ì›Œë“œì˜ ì¼ë¶€ ë¬¸ìžì—´ì´ ë°˜ë³µë˜ëŠ” ê²½ìš°(ex. abc12abc90abc)
-	 * 5. íŒ¨ìŠ¤ì›Œë“œì—ì„œ 3íšŒì´ìƒ ì—°ì† ë°˜ë³µë˜ëŠ” ìˆ«ìžë‚˜ ë¬¸ìžê°€ í¬í•¨ë˜ëŠ”ê°€(ex. 11111, aaaaa)
-	 * 6. íŒ¨ìŠ¤ì›Œë“œì— ìˆ«ìž,ë¬¸ìž ì¡°í•© ì—¬ë¶€ (ìˆ«ìž í˜¹ì€ ë¬¸ìžë§Œìœ¼ë¡œ ì´ë£¨ì–´ì§„ íŒ¨ìŠ¤ì›Œë“œëŠ” ì¸ì •í•˜ì§€ ì•ŠìŒ)
+	 * ´ÙÀ½°ú °°Àº Á¶°ÇÀ» È®ÀÎÇÏ¿©¾ß ÇÑ´Ù
+	 * 1. ÆÐ½º¿öµå ±æÀÌ
+	 * 2. ÆÐ½º¿öµåÀÇ Æ¯¼ö¹®ÀÚ Æ÷ÇÔ ¿©ºÎ
+	 * 3. ÆÐ½º¿öµå¿¡¼­ ¿¬¼ÓÀûÀÎ ´Ü¾î¿­ È¤Àº ¹®ÀÚ¿­ÀÌ Æ÷ÇÔµÇ´Â°¡(ex. 12345, abcde)
+	 * 4. ÆÐ½º¿öµåÀÇ ÀÏºÎ ¹®ÀÚ¿­ÀÌ ¹Ýº¹µÇ´Â °æ¿ì(ex. abc12abc90abc)
+	 * 5. ÆÐ½º¿öµå¿¡¼­ 3È¸ÀÌ»ó ¿¬¼Ó ¹Ýº¹µÇ´Â ¼ýÀÚ³ª ¹®ÀÚ°¡ Æ÷ÇÔµÇ´Â°¡(ex. 11111, aaaaa)
+	 * 6. ÆÐ½º¿öµå¿¡ ¼ýÀÚ,¹®ÀÚ Á¶ÇÕ ¿©ºÎ (¼ýÀÚ È¤Àº ¹®ÀÚ¸¸À¸·Î ÀÌ·ç¾îÁø ÆÐ½º¿öµå´Â ÀÎÁ¤ÇÏÁö ¾ÊÀ½)
 	 */
 	public int checker(String st) {
 		int score=0;
@@ -32,8 +32,45 @@ public class Checker {
 		String strSp= new String("@#$%^&*()-_=+|[]{};:/?.><.");
 		
 		char ch;
-
-//-------------------------í”í•œ íŒ¨ìŠ¤ì›Œë“œ ì‚¬ìš© ì—¬ë¶€ ì²´í¬----------------------------------
+//--------------stringÀÇ ÇÑ ÀÚ¸® ÇÑ ÀÚ¸®¿¡ ´ëÇÑ password checking------------
+		/* ¼ýÀÚ°¡ Æ÷ÇÔµÇ¾îÀÖÀ» °æ¿ì, ¿¬¼ÓµÇ´Â ¼ýÀÚÀÇ À¯¹«¸¦ È®ÀÎ.
+		 * 3°³ ÀÌ»óÀÇ ¼ýÀÚ°¡ ¿¬¼ÓµÇ¾î ÀÖÀ¸¸é ±×¸¸Å­À» °è»êÇØ¼­ ³ªÁß¿¡ »­
+		 */
+		/**
+		for(int i=0;i<st.length();i++){
+			ch=st.charAt(i);
+			Character cr= new Character(ch);
+			if(strSp.contains(cr.toString())){
+				includeSp++;
+			}
+			if(strNum.contains(cr.toString())){
+				if(consecInt[1]==1)
+					consecInt[2]++;
+				else if(consecInt[0]==1)
+					consecInt[1]=0;
+				else
+					consecInt[0]=1;
+				consecChar[0]=0;
+				consecChar[1]=0;
+				//¿¬¼ÓµÈ ¹®ÀÚ ÃÊ±âÈ­
+				existNum = 1;
+			}
+			
+			if(strChar.contains(cr.toString())){
+				if(consecChar[1]==1)
+					consecChar[2]++;
+				else if(consecChar[0]==1)
+					consecChar[1]=0;
+				else
+					consecChar[0]=1;
+				consecInt[0]=0;
+				consecInt[1]=0;
+				//¿¬¼ÓµÈ ¼ýÀÚ ÃÊ±âÈ­
+				existWord = 1;
+			}
+		}
+	*/
+//-------------------------ÈçÇÑ ÆÐ½º¿öµå »ç¿ë ¿©ºÎ Ã¼Å©----------------------------------
 		FileReader fr = null;
 		try {
 			fr = new FileReader("common.txt");
@@ -59,16 +96,16 @@ public class Checker {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//-------------------------ì ìˆ˜ ì¸¡ì •------------------------------------------------------
+//-------------------------Á¡¼ö ÃøÁ¤------------------------------------------------------
 	
 		score+=st.length()*4;
-		//ê¸¸ì´ì— ë”°ë¥¸ ì ìˆ˜ ê°€ì 
+		//±æÀÌ¿¡ µû¸¥ Á¡¼ö °¡Á¡
 		//score+=includeSp*5;
-		//íŠ¹ìˆ˜ë¬¸ìž ê°œìˆ˜ì— ë”°ë¥¸ ì ìˆ˜ ê°€ì 
+		//Æ¯¼ö¹®ÀÚ °³¼ö¿¡ µû¸¥ Á¡¼ö °¡Á¡
 		//score-=consecInt[2]*6;
-		//ì—°ì†ë˜ëŠ” ìˆ«ìžì— ë”°ë¥¸ ì ìˆ˜ ê°ì 
+		//¿¬¼ÓµÇ´Â ¼ýÀÚ¿¡ µû¸¥ Á¡¼ö °¨Á¡
 		//score-=consecChar[2]*6;
-		//ì—°ì†ë˜ëŠ” ë¬¸ìžì— ë”°ë¥¸ ì ìˆ˜ ê°ì 
+		//¿¬¼ÓµÇ´Â ¹®ÀÚ¿¡ µû¸¥ Á¡¼ö °¨Á¡
 		
 		for(int i = 0; i < st.length(); i++)
 		{
@@ -120,7 +157,7 @@ public class Checker {
 			score -= (containsUpper + containsLower);
 		}
 		/**
-		//ë¶€ë¶„ ë¬¸ìžì—´ì´ ì¤‘ë³µë˜ëŠ” ê²½ìš° ê°ì 
+		//ºÎºÐ ¹®ÀÚ¿­ÀÌ Áßº¹µÇ´Â °æ¿ì °¨Á¡
 		for(int i = 1; i < st.length() / 2; i++)
 		{
 			for(int j = 0; j < i; j++)
@@ -133,7 +170,7 @@ public class Checker {
 			}
 		}
 		*/
-		//ì—°ì†ì ìœ¼ë¡œ ìˆ«ìž/ëŒ€ë¬¸ìž/ì†Œë¬¸ìž/íŠ¹ìˆ˜ë¬¸ìžë§Œ ë‚˜ì˜¤ëŠ” ê²½ìš°
+		//¿¬¼ÓÀûÀ¸·Î ¼ýÀÚ/´ë¹®ÀÚ/¼Ò¹®ÀÚ/Æ¯¼ö¹®ÀÚ¸¸ ³ª¿À´Â °æ¿ì
 		for(int i = 0; i < st.length(); i++)
 		{
 			ch=st.charAt(i);
@@ -189,8 +226,9 @@ public class Checker {
 		score -= consecNumCnt * 2;
 		score -= consecSpCnt * 2;
 		
-		//3íšŒì´ìƒ ì—°ì† ë°˜ë³µë˜ëŠ” ìˆ«ìžë‚˜ ë¬¸ìžê°€ í¬í•¨ë˜ëŠ” ê²½ìš° ê°ì 
-		for(int i = 0; i < st.length() - 2; i++)
+		/**
+		//3È¸ÀÌ»ó ¿¬¼Ó ¹Ýº¹µÇ´Â ¼ýÀÚ³ª ¹®ÀÚ°¡ Æ÷ÇÔµÇ´Â °æ¿ì °¨Á¡
+		for(int i = 0; i < st.length() - 3; i++)
 		{
 			//if(st.charAt(i) == st.charAt(i + 1) && st.charAt(i) == st.charAt(i + 2))
 			if(st.charAt(i) == st.charAt(i + 1))
@@ -198,14 +236,14 @@ public class Checker {
 				score -= 10;
 			}
 		}
-				
-		//ë¬¸ìžë‚˜ ìˆ«ìž ë‘˜ ì¤‘ í•˜ë‚˜ë¼ë„ ì—†ëŠ” ê²½ìš° ë¹µì 
-		if((containsUpper == 0 && containsLower == 0) || containsNum == 0)
-			score = 0;
+		*/		
+		//¼ýÀÚ,¹®ÀÚ Áß ¾È µé¾î°£ °Ô ÀÖÀ¸¸é °¨Á¡ - µÑ ´Ù Æ÷ÇÔµÈ °æ¿ì existWord, existNum°ªÀº 1·Î ¼³Á¤µÊ
+		//score *= existChar;
+		//score *= existNum;
 
 		//System.out.println(score);
 		
 		return score;
-		//ìµœì¢…ì ìˆ˜ ë°˜í™˜
+		//ÃÖÁ¾Á¡¼ö ¹ÝÈ¯
 	}
 }

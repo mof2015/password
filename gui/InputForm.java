@@ -50,6 +50,7 @@ public class InputForm extends JFrame{
 	Generator my=new Generator();
 	
 	public InputForm() {
+		//labels and textfields setting
 		la_name = new JLabel("Name");
 		la_id = new JLabel("id");
 		la_pw = new JLabel("pw");
@@ -57,7 +58,6 @@ public class InputForm extends JFrame{
 		la_stren = new JLabel ("Strength");
 		la_len = new JLabel ("Length");
 		
-
 		tf_name = new JTextField();
 		tf_id = new JTextField();
 		tf_pw = new JTextField();
@@ -121,18 +121,18 @@ public class InputForm extends JFrame{
 		add(customNum);
 		add(includeChar);
 		add(includeNum);
-		customChar.setVisible(false);
-		customNum.setVisible(false);
-		includeChar.setVisible(false);
-		includeNum.setVisible(false);
+		customChar.setVisible(true);
+		customNum.setVisible(true);
+		includeChar.setVisible(true);
+		includeNum.setVisible(true);
+		includeChar.setEditable(false);
+		includeNum.setEditable(false);
 
 		selector1.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED){
-					includeChar.setVisible(false);
-					includeNum.setVisible(false);
-					customNum.setVisible(false);
-					customChar.setVisible(false);
+					includeChar.setEditable(false);
+					includeNum.setEditable(false);
 					my.self_password=0;
 
 					listenForSlider = new ChangeListener(){
@@ -160,10 +160,8 @@ public class InputForm extends JFrame{
 		selector2.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED){
-					includeChar.setVisible(true);
-					includeNum.setVisible(true);
-					customNum.setVisible(true);
-					customChar.setVisible(true);
+					includeChar.setEditable(true);
+					includeNum.setEditable(true);
 					my.self_password=1;
 
 
@@ -264,6 +262,7 @@ public class InputForm extends JFrame{
 		setTitle("Edit");
 	}
 }
+//progress status bar
 class ProgressBarUI extends BasicProgressBarUI {
 	private final int[] pallet;
 	public ProgressBarUI() {
@@ -273,9 +272,11 @@ class ProgressBarUI extends BasicProgressBarUI {
 	private static int[] makeGradientPallet() {
 		BufferedImage image = new BufferedImage(100, 1, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2  = image.createGraphics();
+		//progress bar range
 		Point2D start  = new Point2D.Float(0f, 0f);
 		Point2D end    = new Point2D.Float(99f, 0f);
 		float[] dist   = {0.0f, 0.5f, 1.0f};
+		//red -> yellow -> green
 		Color[] colors = { Color.RED, Color.YELLOW, Color.GREEN};
 		g2.setPaint(new LinearGradientPaint(start, end, dist, colors));
 		g2.fillRect(0, 0, 100, 1);

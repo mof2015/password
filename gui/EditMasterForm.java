@@ -1,10 +1,7 @@
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class EditMasterForm extends JFrame {
@@ -44,6 +41,8 @@ public class EditMasterForm extends JFrame {
 		add(bt_cancel);
 		        
 		setBounds(500, 500, 400, 400);
+		setLocationRelativeTo(null);
+
 		setResizable(false);    
 	 }
 	 
