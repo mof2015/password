@@ -13,7 +13,6 @@ public class Checker {
 	 */
 	public int checker(String st) {
 		int score = 0;
-		int includeSp = 0;
 		int containsNum = 0;
 		int containsUpper = 0;
 		int containsLower = 0;
@@ -61,7 +60,7 @@ public class Checker {
 		// Score rule for length
 		score += st.length() * 4;
 
-		// Count number of chars for each category
+		// Count number of letters, numbers, and special characters
 		for (int i = 0; i < st.length(); i++) {
 			ch = st.charAt(i);
 			Character cr = new Character(ch);
@@ -76,7 +75,7 @@ public class Checker {
 			}
 		}
 
-		// Score rule for each chars
+		// Score rule for number of letters, numbers, and special characters
 		if (containsUpper > 0) {
 			score += (st.length() - containsUpper) * 2;
 		}
@@ -132,14 +131,14 @@ public class Checker {
 		score -= consecNumCnt * 2;
 		score -= consecSpCnt * 2;
 
-		// Deduct score if is has same character or number consecutively more than 3 times
+		// Deduct score if a number, a number, or a special character is used consecutively more than 3 times
 		for (int i = 0; i < st.length() - 2; i++) {
 			if (st.charAt(i) == st.charAt(i + 1)) {
 				score -= 10;
 			}
 		}
 
-		// Set the score 0 if it has only characters or numbers
+		// Set the score to 0 if it has only characters or numbers
 		if ((containsUpper == 0 && containsLower == 0) || containsNum == 0)
 			score = 0;
 		
