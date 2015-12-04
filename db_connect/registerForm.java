@@ -7,15 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+@SuppressWarnings("serial")
 public class registerForm extends JFrame {
 	JLabel la_id, la_mail, la_pw, la_confirm, la_name;
 	JTextField tf_id, tf_name;
@@ -88,6 +86,7 @@ public class registerForm extends JFrame {
 		});
 
 		bt_input.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				String id_input = tf_id.getText();
 				String mail_input = tf_mail.getText();
