@@ -30,7 +30,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
-
 public class InputForm extends JFrame{
 	private JFrame controllingFrame;
 	JLabel la_name, la_id, la_pw, la_link, la_stren, la_len;
@@ -101,17 +100,19 @@ public class InputForm extends JFrame{
 			}
 		};
 		
-		strength = new JProgressBar(0, 100); //The strength status bar range
+		//The strength status bar setting
+		strength = new JProgressBar(0, 100); 
 		strength.setBounds(230, 140, 150, 10);
 		strength.setUI(new ProgressBarUI());
 		tf_pw.getDocument().addDocumentListener(listenForProgressBar);
+		//slider seting for length control
 		tmpslider = new JSlider(8,20,10);
 		tmpslider.setPaintTicks(true);
 		tmpslider.setMajorTickSpacing(5);
 		tmpslider.setMinorTickSpacing(1);     
 		tmpslider.setBounds(75,210,230,50);
 		add(tmpslider);
-
+		//setting for customization options
 		customChar.setBounds(20,260,90,30);
 		customNum.setBounds(20, 300, 90, 30);
 		includeChar.setBounds(120,260,150,30);
@@ -128,7 +129,7 @@ public class InputForm extends JFrame{
 		includeNum.setVisible(true);
 		includeChar.setEditable(false);
 		includeNum.setEditable(false);
-
+		//action handling
 		selector1.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED){
@@ -208,20 +209,22 @@ public class InputForm extends JFrame{
 
 		setTitle("Add new");
 		setLayout(null);
-	 
+	 	//UI setting
+	 	//labels
 		la_name.setBounds(30, 30, 60, 30);
 		la_id.setBounds(30, 80, 30, 30);
 		la_pw.setBounds(30, 130, 30, 30);
 		la_link.setBounds(30,360,30,30);
 		la_len.setBounds(20,220,60,30);
 
-		//UI setting
+		//textfields
 		tf_name.setBounds(90, 30, 120, 30);
 		tf_id.setBounds(90, 80, 120, 30);
 		tf_pw.setBounds(90, 130, 120, 30);
 		tf_link.setBounds(90, 360, 200, 30);
 		tf_len.setBounds(330,220,50,30);
 	  
+	  	//buttons
 		bt_input.setBounds(30, 400, 60, 30);
 		bt_cancel.setBounds(100, 400, 120, 30);
 		
@@ -278,6 +281,7 @@ class ProgressBarUI extends BasicProgressBarUI {
 		Point2D end    = new Point2D.Float(99f, 0f);
 		float[] dist   = {0.0f, 0.5f, 1.0f};
 		//red -> yellow -> green
+		//color starts from red color and changes to green color as the strength increases
 		Color[] colors = { Color.RED, Color.YELLOW, Color.GREEN};
 		g2.setPaint(new LinearGradientPaint(start, end, dist, colors));
 		g2.fillRect(0, 0, 100, 1);
