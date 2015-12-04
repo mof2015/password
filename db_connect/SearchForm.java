@@ -4,16 +4,16 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+@SuppressWarnings("serial")
 public class SearchForm extends JFrame {
 
 	JLabel la_box;
 	JTextField tf;
 	JButton bt_input, bt_cancel;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	JComboBox box = new JComboBox(new Object[] { "Name", "ID", "Password", "link" });
 	JTextField textField;
 	ChangeListener listener;
