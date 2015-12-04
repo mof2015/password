@@ -1,18 +1,16 @@
 package db_connec_test;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /*
  * Deactivate form for deactivate user account
  */
+@SuppressWarnings("serial")
 public class DeactivateForm extends JFrame {
 	JLabel la_box, la_box2;
 	JTextField tf_pw, tf_confirm;
@@ -55,7 +53,7 @@ public class DeactivateForm extends JFrame {
 		setResizable(false);
 	}
 
-	// Edit master password form
+	// Deactivate the user account form
 	public void initDeactivate() {
 		setTitle("Deactivate your ID");
 
