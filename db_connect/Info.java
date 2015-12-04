@@ -1,6 +1,7 @@
 package db_connec_test;
 /*
  * Print Copyright
+ * This file is unnecessary since the information to be printed is already done in Main1.java...
  */
 import java.awt.*;
 
