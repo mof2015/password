@@ -1,6 +1,7 @@
 package db_connec_test;
-//�씠 �겢�옒�뒪�뒗 �궗�떎�긽 �븘�슂 �뾾�쓣�벏... �옄諛붾뒗 �떎以묒긽�냽�씠 �븞�맗�땲�떦 �뀪�뀪�뀪�뀪
-
+/*
+ * Print Copyright
+ */
 import java.awt.*;
 import javax.swing.*;
 
