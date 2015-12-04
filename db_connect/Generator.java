@@ -179,7 +179,6 @@ public class Generator {
 		String strsp = new String("!@#$%^&*");// (),.?/[]{};:|-=_+은 생략
 		String digits = "[0-9]+";
 		String chars = "[A-Za-z]+";
-		String spChars = "[!@#$%^&*]+";
 		Random r = new Random();
 		outputLength = length; // Save length for print out
 		
