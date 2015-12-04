@@ -126,7 +126,8 @@ public class registerForm extends JFrame {
 
 				// prepare sql statement
 				try {
-					st = con.prepareStatement("INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
+					st = con.prepareStatement(
+							"INSERT INTO `account` (`id`, `pw`, `name`, `email`) VALUES (?, ?, ?, ?)");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -134,7 +135,7 @@ public class registerForm extends JFrame {
 
 				try {
 					// bind params into sql statement
-					String hashed_pw = SHA256(pw_input+id_input);
+					String hashed_pw = SHA256(pw_input + id_input);
 					st.setString(1, id_input);
 					st.setString(2, hashed_pw);
 					st.setString(3, name_input);
@@ -155,24 +156,24 @@ public class registerForm extends JFrame {
 		setResizable(false); // fix frame size
 		setVisible(true);
 	}
-	
-	public String SHA256(String str){
 
-		String encryption = ""; 
+	public String SHA256(String str) {
 
-		try{
-			MessageDigest hash = MessageDigest.getInstance("SHA-256"); 
-			hash.update(str.getBytes()); 
+		String encryption = "";
+
+		try {
+			MessageDigest hash = MessageDigest.getInstance("SHA-256");
+			hash.update(str.getBytes());
 			byte byteData[] = hash.digest();
-			StringBuffer sb = new StringBuffer(); 
+			StringBuffer sb = new StringBuffer();
 
-			for(int i = 0 ; i < byteData.length ; i++){
-				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			for (int i = 0; i < byteData.length; i++) {
+				sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
 			}
 			encryption = sb.toString();
-		}catch(NoSuchAlgorithmException e){
-			e.printStackTrace(); 
-			encryption = null; 
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			encryption = null;
 		}
 
 		return encryption;
