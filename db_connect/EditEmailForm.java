@@ -3,11 +3,10 @@ package db_connec_test;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+@SuppressWarnings("serial")
 public class EditEmailForm extends JFrame {
 	JLabel la_box;
 	JTextField tf_email;
