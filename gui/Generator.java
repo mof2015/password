@@ -1,7 +1,4 @@
-package db_connect;
-
 import java.util.Random;
-
 
 public class Generator {
 	int self_password = 1;
